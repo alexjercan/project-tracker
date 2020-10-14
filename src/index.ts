@@ -1,13 +1,10 @@
-import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
-
+import * as authModule from './auth';
 import bodyParser from 'body-parser';
+import { dotenv } from './config';
 import express from 'express';
 import * as fs from 'fs';
 import https from 'https';
 import http from 'http';
-
-import { dotenv } from './config';
-import * as authModule from './auth';
 
 const startServer = () => {
   const app = express();
@@ -42,6 +39,8 @@ const startServer = () => {
   };
 };
 
-oracledbWrapper.createPool(dotenv.database).then(() => {
-  startServer();
-});
+startServer();
+
+// oracledbWrapper.createPool(dotenv.database).then(() => {
+//   startServer();
+// });

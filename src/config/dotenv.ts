@@ -10,7 +10,11 @@ export const dotenv = {
     httpPort: +(process.env.HTTP_PORT ?? 3000),
     httpsPort: +(process.env.HTTPS_PORT ?? 3001),
   },
-  auth: {
-    sessionSecret: process.env.SESSION_SECRET ?? 'secret',
+  session: {
+    name: 'session',
+    secret:  process.env.SESSION_SECRET ?? 'secret',
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true },
   }
 };

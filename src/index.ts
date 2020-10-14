@@ -1,10 +1,11 @@
-import * as authModule from './auth';
+import auth from './auth';
 import bodyParser from 'body-parser';
 import { dotenv } from './config';
 import express from 'express';
 import * as fs from 'fs';
 import https from 'https';
 import http from 'http';
+import session from 'express-session';
 
 const startServer = () => {
   const app = express();
@@ -19,13 +20,14 @@ const startServer = () => {
   process.on('SIGINT', () => shutdown());
 
   app.use(bodyParser.json());
+  app.use(session(dotenv.session));
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.get('/', (req, res) => {
     res.send('ok');
   });
 
-  app.use('/auth', authModule.router);
+  app.use('/auth', auth());
 
   const httpServer = http.createServer(app);
   // const httpsServer = https.createServer(credentials, app);

@@ -1,8 +1,20 @@
 import Model from './model';
 import { IUser, IUserInput } from './types';
+import passport from 'passport';
 
 export default class Service {
-  constructor(private _model: Model) {}
+  constructor(private _model: Model) {
+    passport.serializeUser((user: IUser, done) => {
+      done(null, user.username);
+    });
+
+    passport.deserializeUser((username: string, done) => {
+      this._model
+        .FindOne(username)
+        .then((user) => done(null, user))
+        .catch((error) => done(error, false));
+    });
+  }
 
   async SignUp(userInput: IUserInput): Promise<IUser | undefined> {
     try {

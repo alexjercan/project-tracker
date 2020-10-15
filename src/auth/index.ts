@@ -2,27 +2,21 @@ import { signUp, signIn, logOut } from './controller';
 import { NextFunction, Request, Response, Router } from 'express';
 
 const ensureNotAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) return res.status(200).send('Authenticated');
   next();
 };
 
 const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.isAuthenticated()) return res.status(200).send('Not Authenticated');
   next();
-};
-
-const createSessionCookie = (req: Request, res: Response, next: NextFunction) => {
-  console.log('Should create cookie');
-};
-
-const deleteSessionCookie = (req: Request, res: Response, next: NextFunction) => {
-  console.log('Should delete cookie');
 };
 
 const auth = () => {
   const router = Router();
 
-  router.post('/signup', ensureNotAuthenticated, signUp, createSessionCookie);
-  router.post('/signin', ensureNotAuthenticated, signIn, createSessionCookie);
-  router.post('/logout', ensureAuthenticated, logOut, deleteSessionCookie);
+  router.post('/signup', ensureNotAuthenticated, signUp);
+  router.post('/signin', ensureNotAuthenticated, signIn);
+  router.post('/logout', ensureAuthenticated, logOut);
 
   return router;
 };

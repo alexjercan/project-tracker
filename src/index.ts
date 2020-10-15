@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import https from 'https';
 import http from 'http';
 import session from 'express-session';
+import passport from 'passport';
 
 const startServer = () => {
   const app = express();
@@ -19,9 +20,11 @@ const startServer = () => {
   process.on('SIGTERM', () => shutdown());
   process.on('SIGINT', () => shutdown());
 
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use(session(dotenv.session));
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.get('/', (req, res) => {
     res.send('ok');

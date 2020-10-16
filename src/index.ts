@@ -40,9 +40,6 @@ const startServer = () => {
   };
 };
 
-// tslint:disable-next-line: no-console
-console.log(dotenv.database);
-
 oracledbWrapper.createPool(dotenv.database).then(() => {
   startServer();
 });

@@ -12,5 +12,6 @@ export const dotenv = {
   },
   auth: {
     secret: process.env.AUTH_SECRET ?? 'secret',
+    token: process.env.AUTH_TOKEN ?? 'auth-token',
   },
 };

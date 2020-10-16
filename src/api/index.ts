@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction, Router } from 'express';
-import { IVerified, verify } from '../token';
+import Controller from './controller';
+import { Router } from 'express';
+import { ensureAuthenticated } from './middleware';
+import Service from './service';
 
 const api = () => {
+  const service = new Service();
+  const controller = new Controller(service);
+
   const router = Router();
 
-  router.use(verify);
-
-  router.get('/', (req: Request, res: Response, next: NextFunction) => {
-    const verified: IVerified = req.body.verified;
-    return res.status(200).send('peepeepoopoo ' + verified.username);
-  });
+  router.get('/', ensureAuthenticated, controller.ShowName.bind(controller));
 
   return router;
 };

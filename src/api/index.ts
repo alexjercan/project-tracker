@@ -1,26 +1,15 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import jwt from 'jsonwebtoken';
-import { dotenv } from '../config';
-
-const verifyTokenScuffed = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.header('auth-token');
-  if (token === undefined) return res.status(401).send('Access Denied');
-
-  try {
-    const verified = jwt.verify(token, dotenv.auth.secret);
-    // verified {username, iat}
-    next();
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
+import { verify } from '../token';
 
 const api = () => {
   const router = Router();
 
-  router.use(verifyTokenScuffed);
+  router.use(verify);
 
-  router.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('peepeepoopoo'));
+  router.get('/', (req: Request, res: Response, next: NextFunction) => {
+    
+    return res.status(200).send('peepeepoopoo' + username));
+  };
 
   return router;
 };

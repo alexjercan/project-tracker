@@ -1,7 +1,6 @@
 ﻿import { NextFunction, Request, Response } from 'express';
 import Service from './service';
-import jwt from 'jsonwebtoken';
-import { dotenv } from '../config';
+import { sign } from '../token';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -11,12 +10,10 @@ export default class Controller {
       const userData = await this._service.SignUp(req.body);
       if (userData === undefined) return res.status(200).send('Invalid SignUp');
 
-      const token = jwt.sign({ username: userData.username }, dotenv.auth.secret);
-
+      const token = sign({ username: userData.username });
       return res.header('auth-token', token).status(200).send('Authentication Successful');
     } catch (error) {
-      res.status(500).send(error);
-      next(error);
+      return res.status(500).send(error);
     }
   }
 
@@ -25,12 +22,10 @@ export default class Controller {
       const userRecord = await this._service.SignIn(req.body);
       if (userRecord === undefined) return res.status(200).send('Invalid SignIn');
 
-      const token = jwt.sign({ username: userRecord.username }, dotenv.auth.secret);
-
+      const token = sign({ username: userRecord.username });
       return res.header('auth-token', token).status(200).send('Authentication Successful');
     } catch (error) {
-      res.status(500).send(error);
-      next(error);
+      return res.status(500).send(error);
     }
   }
 }

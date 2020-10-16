@@ -1,13 +1,27 @@
 import Model from './model';
 import { IUser, IUserInput } from './types';
 import passport from 'passport';
+import { Strategy } from 'passport-local';
 
 export default class Service {
   constructor(private _model: Model) {
+    passport.use(
+      'local',
+      new Strategy(async (username, password, done) => {
+        try {
+          const user: IUser | undefined = await this.SignIn({ username, password });
+
+          if (user === undefined) return done(null, false, { message: 'Invalid Credentials.\n' });
+
+          return done(null, user);
+        } catch (error) {
+          done(error);
+        }
+      }),
+    );
     passport.serializeUser((user: IUser, done) => {
       done(null, user.username);
     });
-
     passport.deserializeUser((username: string, done) => {
       this._model
         .FindOne(username)

@@ -1,4 +1,6 @@
+import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import auth from './auth';
+import api from './api';
 import bodyParser from 'body-parser';
 import { dotenv } from './config';
 import express from 'express';
@@ -21,11 +23,10 @@ const startServer = () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  app.get('/', (req, res) => {
-    res.send('ok');
-  });
+  app.get('/', (req, res) => res.status(200).send('ok'));
 
   app.use('/auth', auth());
+  app.use('/api', api());
 
   const httpServer = http.createServer(app);
   // const httpsServer = https.createServer(credentials, app);
@@ -39,8 +40,9 @@ const startServer = () => {
   };
 };
 
-startServer();
+// tslint:disable-next-line: no-console
+console.log(dotenv.database);
 
-// oracledbWrapper.createPool(dotenv.database).then(() => {
-//   startServer();
-// });
+oracledbWrapper.createPool(dotenv.database).then(() => {
+  startServer();
+});

@@ -1,6 +1,7 @@
 ﻿import { NextFunction, Request, Response } from 'express';
 import Service from './service';
-import { IUser } from './types';
+import jwt from 'jsonwebtoken';
+import { dotenv } from '../config';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -10,26 +11,24 @@ export default class Controller {
       const userData = await this._service.SignUp(req.body);
       if (userData === undefined) return res.status(200).send('Invalid SignUp');
 
-      /*req.login(userData, (error) => {
-        if (error) return next(error);
-        return res.status(200).send('Authentication Successful');
-      });*/
+      return res.status(200).send('Authentication Successful');
     } catch (error) {
-      res.status(500);
+      res.status(500).send(error);
       next(error);
     }
   }
 
   async SignIn(req: Request, res: Response, next: NextFunction) {
-    /*passport.authenticate('local', (error, user: IUser | undefined, info) => {
-      if (info) return res.send(info.message);
-      if (error) return next(error);
-      if (!user) return res.status(200).send('Authentication Error');
+    try {
+      const userRecord = await this._service.SignIn(req.body);
+      if (userRecord === undefined) return res.status(200).send('Invalid SignIn');
 
-      req.login(user, (err) => {
-        if (err) return next(err);
-        return res.status(200).send('Authentication Successful');
-      });
-    });*/
+      const token = jwt.sign({ username: userRecord.username }, dotenv.auth.secret);
+
+      return res.header('auth-token', token).status(200).send('Authentication Successful');
+    } catch (error) {
+      res.status(500).send(error);
+      next(error);
+    }
   }
 }

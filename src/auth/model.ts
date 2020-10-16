@@ -3,35 +3,35 @@ import { IUser, IUserInput } from './types';
 
 export default class Model {
   async Create(user: IUserInput): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ user_id: string }>(
-      `BEGIN insertUser(p_username => :username, p_password => :p2, p_user_id => :user_id); END;`,
+    const result = await oracledbWrapper.simpleExecute<{ user_id: number }>(
+      `BEGIN insertUser(p_username => :p1, p_password => :p2, p_user_id => :user_id); END;`,
       {
         p1: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: user.username },
         p2: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: user.password },
-        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.STRING },
+        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
       },
       {},
     );
 
     const id = result.outBinds?.user_id;
-    if (id === undefined) return undefined;
+    if (id === null) return undefined;
     return { _id: id, ...user };
   }
 
   async FindOne(username: string): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ password: string; user_id: string }>(
-      `BEGIN getPassword(p_username => :p1, p_password => :password, p_user_id => :user_id); END;`,
+    const result = await oracledbWrapper.simpleExecute<{ password: string; user_id: number }>(
+      `BEGIN getUser(p_username => :p1, p_password => :password, p_user_id => :user_id); END;`,
       {
         p1: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: username },
         password: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.STRING },
-        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.STRING },
+        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
       },
       {},
     );
 
     const id = result.outBinds?.user_id;
     const password = result.outBinds?.password;
-    if (id === undefined || password === undefined) return undefined;
+    if (id === null || password === null) return undefined;
     return { _id: id, username, password };
   }
 }

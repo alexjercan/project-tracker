@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { verify } from '../token';
+import { IVerified, verify } from '../token';
 
 const api = () => {
   const router = Router();
@@ -7,9 +7,9 @@ const api = () => {
   router.use(verify);
 
   router.get('/', (req: Request, res: Response, next: NextFunction) => {
-    
-    return res.status(200).send('peepeepoopoo' + username));
-  };
+    const verified: IVerified = req.body.verified;
+    return res.status(200).send('peepeepoopoo ' + verified.username);
+  });
 
   return router;
 };

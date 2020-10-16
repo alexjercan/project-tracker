@@ -11,7 +11,9 @@ export default class Controller {
       const userData = await this._service.SignUp(req.body);
       if (userData === undefined) return res.status(200).send('Invalid SignUp');
 
-      return res.status(200).send('Authentication Successful');
+      const token = jwt.sign({ username: userData.username }, dotenv.auth.secret);
+
+      return res.header('auth-token', token).status(200).send('Authentication Successful');
     } catch (error) {
       res.status(500).send(error);
       next(error);

@@ -8,7 +8,7 @@ const verifyTokenScuffed = (req: Request, res: Response, next: NextFunction) => 
 
   try {
     const verified = jwt.verify(token, dotenv.auth.secret);
-    if (verified === undefined) return res.status(401).send('Invalid Token');
+    // verified {username, iat}
     next();
   } catch (error) {
     res.status(400).send(error);

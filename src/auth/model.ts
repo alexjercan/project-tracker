@@ -3,35 +3,36 @@ import { IUser, IUserInput } from './types';
 
 export default class Model {
   async Create(user: IUserInput): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ user_id: number }>(
-      `BEGIN insertUser(p_username => :p1, p_password => :p2, p_user_id => :user_id); END;`,
+    const result = await oracledbWrapper.simpleExecute<{ error: number }>(
+      `BEGIN insertUser(p_username => :p1, p_password => :p2, p_error => :error); END;`,
       {
         p1: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: user.username },
         p2: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: user.password },
-        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
+        error: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
       },
       {},
     );
 
-    const id = result.outBinds?.user_id;
-    if (id === null) return undefined;
-    return { _id: id, ...user };
+    const error = result.outBinds?.error;
+    if (error !== 0) return undefined;
+    return { ...user };
   }
 
   async FindOne(username: string): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ password: string; user_id: number }>(
-      `BEGIN getUser(p_username => :p1, p_password => :password, p_user_id => :user_id); END;`,
+    const result = await oracledbWrapper.simpleExecute<{ password: string; error: number }>(
+      `BEGIN getUser(p_username => :p1, p_password => :password, p_error => :error); END;`,
       {
         p1: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: username },
         password: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.STRING },
-        user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
+        error: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
       },
       {},
     );
 
-    const id = result.outBinds?.user_id;
+    const error = result.outBinds?.error;
+    if (error !== 0) return undefined;
+
     const password = result.outBinds?.password;
-    if (id === null || password === null) return undefined;
-    return { _id: id, username, password };
+    return { username, password };
   }
 }

@@ -10,29 +10,34 @@ CREATE UNIQUE INDEX user_id_pk ON users (user_id);
 ALTER TABLE users
     ADD (CONSTRAINT user_id_pk PRIMARY KEY (user_id));
 
-CREATE OR REPLACE PROCEDURE insertUser(p_username IN STRING, p_password IN STRING, p_user_id OUT NUMBER)
+CREATE OR REPLACE PROCEDURE insertUser(p_username IN STRING, p_password IN STRING, p_error OUT NUMBER)
 IS
 BEGIN
-    INSERT INTO users(username, password)
-    VALUES (p_username, p_password);
-    p_user_id := 0;
-    COMMIT;
+    BEGIN
+        INSERT INTO users(username, password)
+        VALUES (p_username, p_password);
+        p_error := 0;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+        p_error := 1;
+    END;
 END;
 /
 
-CREATE OR REPLACE PROCEDURE getUser(p_username IN STRING, p_password OUT STRING, p_user_id OUT NUMBER)
+CREATE OR REPLACE PROCEDURE getUser(p_username IN STRING, p_password OUT STRING, p_error OUT NUMBER)
 IS
-    v_user_count INTEGER;
 BEGIN
     BEGIN
-        SELECT user_id, password
-        INTO p_user_id, p_password
+        SELECT password
+        INTO p_password
         FROM USERS
         WHERE username = p_username;
+        p_error := 0;
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
         p_password := NULL;
-        p_user_id := NULL;
+        p_error := 1;
     END;
 END;
 /

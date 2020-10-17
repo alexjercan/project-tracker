@@ -7,8 +7,8 @@ export const dotenv = {
     poolMax: +(process.env.ORACLEDB_POOL_MAX ?? 10),
   },
   server: {
-    httpPort: +(process.env.HTTP_PORT ?? 3000),
-    httpsPort: +(process.env.HTTPS_PORT ?? 3001),
+    httpPort: +(process.env.HTTP_PORT ?? 8080),
+    httpsPort: +(process.env.HTTPS_PORT ?? 8081),
   },
   auth: {
     secret: process.env.AUTH_SECRET ?? 'secret',

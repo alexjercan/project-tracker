@@ -6,7 +6,7 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
   const token = req.header(dotenv.auth.token);
 
   const verified = verify(token, dotenv.auth.secret);
-  if (verified === undefined) return res.status(500).send('Access Denied');
+  if (verified === undefined) return res.status(401).send({ message: 'Access Denied' });
 
   req.body.verified = verified as IVerified;
   next();

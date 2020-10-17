@@ -7,6 +7,6 @@ export default class Controller {
 
   ShowName(req: Request, res: Response, next: NextFunction) {
     const verified = req.body.verified as IVerified;
-    return res.status(200).send('peepeepoopoo ' + verified.username);
+    return res.status(200).send({ message: 'peepeepoopoo ' + verified.username });
   }
 }

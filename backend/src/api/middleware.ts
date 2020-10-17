@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { IVerified, verify } from '../token';
+import { IVerified, verify } from '@alexjercan/jwt-wrapper';
 import { dotenv } from '../config';
 
 export const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {

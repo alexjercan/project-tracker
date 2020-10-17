@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser } from './types';
-import { sign } from '../token';
+import { sign } from '@alexjercan/jwt-wrapper';
 import { dotenv } from '../config';
 
 export const authSuccess = (req: Request, res: Response, next: NextFunction) => {

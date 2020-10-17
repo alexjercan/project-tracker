@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { IVerified } from '../token';
+import { IVerified } from '@alexjercan/jwt-wrapper';
 import Service from './service';
 
 export default class Controller {

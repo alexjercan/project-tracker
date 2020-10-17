@@ -9,7 +9,6 @@ describe('Auth Tests', () => {
         const model: Model = {
           async Create(user: IUserInput): Promise<IUser | undefined> {
             return {
-              _id: 'mock',
               ...user,
             };
           },
@@ -27,7 +26,8 @@ describe('Auth Tests', () => {
         const userRecord = await service.SignUp(userInput);
 
         expect(userRecord).toBeDefined();
-        expect(userRecord?._id).toBe('mock');
+        expect(userRecord?.username).toBe(userInput.username);
+        expect(userRecord?.password).toBe(userInput.password);
       });
       it('Should return undefined when the model does not create a record', async () => {
         const model: Model = {
@@ -63,7 +63,6 @@ describe('Auth Tests', () => {
           },
           async FindOne(username: string): Promise<IUser | undefined> {
             return {
-              _id: 'mock',
               username,
               password: userInput.password,
             };
@@ -74,7 +73,6 @@ describe('Auth Tests', () => {
         const userRecord = await service.SignIn(userInput);
 
         expect(userRecord).toBeDefined();
-        expect(userRecord?._id).toBe('mock');
         expect(userRecord?.username).toBe(userInput.username);
         expect(userRecord?.password).toBe(userInput.password);
       });
@@ -90,7 +88,6 @@ describe('Auth Tests', () => {
           },
           async FindOne(username: string): Promise<IUser | undefined> {
             return {
-              _id: 'mock',
               username,
               password: userInput.password + '1',
             };

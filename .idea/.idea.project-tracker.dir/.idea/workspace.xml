@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cd670b34-797a-41a0-8420-c33122cdadc5" name="Default Changelist" comment="Added Passport">
+      <change beforePath="$PROJECT_DIR$/src/auth/controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/service.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/jest.config.json" />
+        <option value="$PROJECT_DIR$/node_modules/@alexjercan/oracledb-wrapper/index.js" />
+        <option value="$PROJECT_DIR$/node_modules/@alexjercan/oracledb-wrapper/lib/index.d.ts" />
+        <option value="$PROJECT_DIR$/node_modules/@alexjercan/oracledb-wrapper/index.d.ts" />
+        <option value="$PROJECT_DIR$/node_modules/@alexjercan/oracledb-wrapper/package.json" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/session.ts" />
+        <option value="$PROJECT_DIR$/src/config/dotenv.ts" />
+        <option value="$PROJECT_DIR$/src/auth/session.ts" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
+        <option value="$PROJECT_DIR$/.git/hooks/pre-commit" />
+        <option value="$PROJECT_DIR$/src/auth/model.ts" />
+        <option value="$PROJECT_DIR$/src/auth/index.ts" />
+        <option value="$PROJECT_DIR$/src/auth/test.ts" />
+        <option value="$PROJECT_DIR$/src/auth/controller.ts" />
+        <option value="$PROJECT_DIR$/src/auth/service.ts" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1irSVGlD4IKYRw5OVsMJNH1DsOM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="oracle" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/@alexjercan/oracledb-wrapper/package.json" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/jest" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\dev\project-tracker\node_modules\prettier" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="ts.external.directory.path" value="C:\dev\project-tracker\node_modules\typescript\lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RunManager" selected="Jest.Auth Tests">
+    <configuration name="Auth Tests" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/auth/test.ts" />
+      <test-names>
+        <test-name value="Auth Tests" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Jest.Auth Tests" />
+      <item itemvalue="npm.build" />
+      <item itemvalue="npm.start" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cd670b34-797a-41a0-8420-c33122cdadc5" name="Default Changelist" comment="" />
+      <created>1602664241064</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602664241064</updated>
+      <workItem from="1602664245074" duration="5299000" />
+      <workItem from="1602679849829" duration="1788000" />
+      <workItem from="1602688158818" duration="7237000" />
+      <workItem from="1602747258910" duration="4157000" />
+      <workItem from="1602759519005" duration="5371000" />
+      <workItem from="1602765337785" duration="708000" />
+    </task>
+    <task id="LOCAL-00001" summary="Created Basic Session">
+      <created>1602695965726</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602695965726</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added Passport">
+      <created>1602751595021</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602751595021</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Created Basic Session" />
+    <MESSAGE value="Added Passport" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Passport" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="310" y="15" width="1089" height="809" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602766041474">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="310" y="15" width="1089" height="809" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1602766041474" />
+    <state x="508" y="222" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1602681638205">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="508" y="222" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1602681638205" />
+    <state x="574" y="148" key="#com.intellij.ide.util.MemberChooser" timestamp="1602762481970">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="574" y="148" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1602762481970" />
+    <state width="1023" height="228" key="GridCell.Tab.0.bottom" timestamp="1602764286280">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1023" height="228" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1602764286280" />
+    <state width="1023" height="228" key="GridCell.Tab.0.center" timestamp="1602764286279">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1023" height="228" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1602764286279" />
+    <state width="1023" height="228" key="GridCell.Tab.0.left" timestamp="1602764286279">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1023" height="228" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1602764286279" />
+    <state width="1023" height="228" key="GridCell.Tab.0.right" timestamp="1602764286280">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1023" height="228" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1602764286280" />
+    <state width="189" height="539" key="HiddenNamespacesPopup" timestamp="1602765401406">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="189" height="539" key="HiddenNamespacesPopup/0.0.1536.824@0.0.1536.824" timestamp="1602765401406" />
+    <state x="277" y="77" key="SettingsEditor" timestamp="1602693556079">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="277" y="77" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1602693556079" />
+    <state x="361" y="161" key="Vcs.Push.Dialog.v2" timestamp="1602751629413">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="161" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1602751629413" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1602764778426">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1602764778426" />
+  </component>
+</project>

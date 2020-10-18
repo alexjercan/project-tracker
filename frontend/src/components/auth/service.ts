@@ -1,35 +1,28 @@
 import { IUserInput } from "./types";
+import Request from "./request";
 
-export const signIn = async (
-  userInput: IUserInput
-): Promise<Headers | undefined> => {
-  const response = await fetch("/auth/signin", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userInput),
-  });
+export default class Service {
+  constructor(private _request: Request) {}
 
-  if (response.status !== 200) return undefined;
+  async SignIn(userInput: IUserInput): Promise<Headers | undefined> {
+    const response = await this._request.Post(
+      "/auth/signin",
+      JSON.stringify(userInput)
+    );
 
-  return response.headers;
-};
+    if (response.status !== 200) return undefined;
 
-export const signUp = async (
-  userInput: IUserInput
-): Promise<Headers | undefined> => {
-  const response = await fetch("/auth/signup", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userInput),
-  });
+    return response.headers;
+  }
 
-  if (response.status !== 200) return undefined;
+  async SignUp(userInput: IUserInput): Promise<Headers | undefined> {
+    const response = await this._request.Post(
+      "/auth/signup",
+      JSON.stringify(userInput)
+    );
 
-  return response.headers;
-};
+    if (response.status !== 200) return undefined;
+
+    return response.headers;
+  }
+}

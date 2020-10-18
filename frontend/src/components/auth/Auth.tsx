@@ -1,20 +1,14 @@
 import React, { useState } from "react";
-import { IResponse } from "../types";
-import { IUserInput } from "./types";
+import { useHistory, useLocation } from "react-router-dom";
 
-interface Props {}
+interface IUserInput {
+  username: string;
+  password: string;
+}
 
-const test = async (
-  headers: Headers | undefined
-): Promise<IResponse | undefined> => {
-  const response = await fetch("/api", {
-    method: "GET",
-    headers: headers,
-  });
-
-  if (response.status !== 200) return undefined;
-  return (await response.json()) as IResponse;
-};
+interface Props {
+  setHeadersValue: React.Dispatch<React.SetStateAction<Headers | undefined>>;
+}
 
 const signIn = async (userInput: IUserInput): Promise<Headers | undefined> => {
   const response = await fetch("/auth/signin", {
@@ -49,8 +43,14 @@ const signUp = async (userInput: IUserInput): Promise<Headers | undefined> => {
 const Auth: React.FC<Props> = (props) => {
   const [usernameValue, setUsernameValue] = useState<string>("");
   const [passwordValue, setPasswordValue] = useState<string>("");
-  const [headersValue, setHeadersValue] = useState<Headers | undefined>();
-  const [testValue, setTestValue] = useState<IResponse | undefined>();
+
+  let history = useHistory<any>();
+  let location = useLocation<any>();
+
+  const authenticationSuccessfulHandler = () => {
+    const { from } = location.state || { from: { pathname: "/" } };
+    history.replace(from);
+  };
 
   const usernameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsernameValue(event.target.value);
@@ -67,7 +67,9 @@ const Auth: React.FC<Props> = (props) => {
     };
 
     const headers = await signIn(userInput);
-    setHeadersValue(headers);
+    props.setHeadersValue(headers);
+
+    if (headers !== undefined) authenticationSuccessfulHandler();
   };
 
   const signUpClickedHandler = async () => {
@@ -77,12 +79,9 @@ const Auth: React.FC<Props> = (props) => {
     };
 
     const headers = await signUp(userInput);
-    setHeadersValue(headers);
-  };
+    props.setHeadersValue(headers);
 
-  const testClickedHandler = async () => {
-    const response = await test(headersValue);
-    setTestValue(response);
+    if (headers !== undefined) authenticationSuccessfulHandler();
   };
 
   return (
@@ -108,10 +107,6 @@ const Auth: React.FC<Props> = (props) => {
       <div>
         <button onClick={signInClickedHandler}>SignIn</button>
         <button onClick={signUpClickedHandler}>SignUp</button>
-        <button onClick={testClickedHandler}>Test</button>
-      </div>
-      <div>
-        <div>{testValue?.message}</div>
       </div>
     </div>
   );

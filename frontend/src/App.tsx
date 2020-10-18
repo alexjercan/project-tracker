@@ -1,13 +1,8 @@
 import React from "react";
-import Auth from "./auth/Auth";
-import "./App.css";
+import Home from "./components/Home";
 
-function App() {
-  return (
-    <div className="App">
-      <Auth />
-    </div>
-  );
-}
+const App: React.FC = () => {
+  return <Home />;
+};
 
 export default App;

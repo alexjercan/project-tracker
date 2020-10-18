@@ -1,9 +1,14 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("App Tests", () => {
+  it("should render the home page when first loaded", () => {
+    const result = render(<App />);
+
+    expect(result).toBeDefined();
+    result
+      .findAllByRole("href")
+      .then((value) => expect(value.length).toStrictEqual(2));
+  });
 });

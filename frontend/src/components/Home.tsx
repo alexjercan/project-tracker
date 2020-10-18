@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Auth from "./auth/Auth";
-import PrivateRoute from "./PrivateRoute";
+import { Auth } from "./auth";
+import PrivateRoute from "../utils/PrivateRoute";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import About from "./About";
+import Dashboard from "./private/Dashboard";
+import About from "./public/About";
 
 const Home: React.FC = () => {
   const [headersValue, setHeadersValue] = useState<Headers | undefined>();

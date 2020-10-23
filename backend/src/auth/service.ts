@@ -6,8 +6,8 @@ export default class Service {
 
   async SignUp(userInput: IUserInput): Promise<IUser | undefined> {
     try {
-      const userRecord = await this._model.FindOne(userInput.username);
-      if (userRecord !== undefined) return undefined;
+      const record = await this._model.FindOne(userInput.username);
+      if (record !== undefined) return undefined;
 
       const createdRecord = await this._model.Create(userInput);
       if (createdRecord === undefined) return undefined;
@@ -20,13 +20,13 @@ export default class Service {
 
   async SignIn(userInput: IUserInput): Promise<IUser | undefined> {
     try {
-      const userRecord = await this._model.FindOne(userInput.username);
-      if (userRecord === undefined) return undefined;
+      const record = await this._model.FindOne(userInput.username);
+      if (record === undefined) return undefined;
 
-      const validPassword = userRecord.password === userInput.password;
+      const validPassword = record.password === userInput.password;
       if (!validPassword) return undefined;
 
-      return userRecord;
+      return record;
     } catch (error) {
       throw error;
     }

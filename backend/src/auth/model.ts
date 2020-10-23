@@ -20,7 +20,7 @@ export default class Model {
   }
 
   async FindOne(username: string): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ user_id: number, password: string; error: number }>(
+    const result = await oracledbWrapper.simpleExecute<{ user_id: number, password: string, error: number }>(
       `BEGIN getUser(p_username => :p1, p_user_id => :user_id, p_password => :password, p_error => :error); END;`,
       {
         p1: { dir: oracledbWrapper.BIND_IN, type: oracledbWrapper.STRING, val: username },

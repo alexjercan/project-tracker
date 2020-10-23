@@ -2,6 +2,7 @@ import Controller from './controller';
 import { Router } from 'express';
 import { ensureAuthenticated } from './middleware';
 import Service from './service';
+import project from './project';
 
 const api = () => {
   const service = new Service();
@@ -9,7 +10,10 @@ const api = () => {
 
   const router = Router();
 
-  router.get('/', ensureAuthenticated, controller.ShowName.bind(controller));
+  router.use(ensureAuthenticated);
+
+  router.use('/project', project());
+  router.get('/', controller.ShowName.bind(controller));
 
   return router;
 };

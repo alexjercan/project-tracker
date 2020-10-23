@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 interface IResponse {
-  message: string;
+  username: string;
 }
 
 interface Props {
@@ -29,7 +29,7 @@ const Dashboard: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h2>Hello {responseValue?.message}</h2>
+      <h2>Hello {responseValue?.username}</h2>
 
       <hr />
     </div>

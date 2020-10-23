@@ -6,5 +6,4 @@ export interface IUserInput {
 export interface IResponse {
   status: number;
   headers: Headers;
-  message?: string;
 }

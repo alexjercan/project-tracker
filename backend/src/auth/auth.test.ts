@@ -9,6 +9,7 @@ describe('Auth Tests', () => {
         const model: Model = {
           async Create(user: IUserInput): Promise<IUser | undefined> {
             return {
+              user_id: 1,
               ...user,
             };
           },
@@ -63,6 +64,7 @@ describe('Auth Tests', () => {
           },
           async FindOne(username: string): Promise<IUser | undefined> {
             return {
+              user_id: 1,
               username,
               password: userInput.password,
             };
@@ -88,6 +90,7 @@ describe('Auth Tests', () => {
           },
           async FindOne(username: string): Promise<IUser | undefined> {
             return {
+              user_id: 1,
               username,
               password: userInput.password + '1',
             };

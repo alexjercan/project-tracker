@@ -10,14 +10,21 @@ CREATE UNIQUE INDEX user_id_pk ON users (user_id);
 ALTER TABLE users
     ADD (CONSTRAINT user_id_pk PRIMARY KEY (user_id));
 
-CREATE OR REPLACE PROCEDURE insertUser(p_username IN STRING, p_password IN STRING, p_error OUT NUMBER)
+CREATE OR REPLACE PROCEDURE insertUser(p_username IN STRING, p_password IN STRING, p_user_id OUT NUMBER, p_error OUT NUMBER)
 IS
 BEGIN
     BEGIN
         INSERT INTO users(username, password)
         VALUES (p_username, p_password);
+
         p_error := 0;
         COMMIT;
+
+        -- todo trigger
+        SELECT user_id
+        INTO p_user_id
+        FROM users
+        WHERE username = p_username;
     EXCEPTION
         WHEN OTHERS THEN
         p_error := 1;
@@ -25,13 +32,13 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE PROCEDURE getUser(p_username IN STRING, p_password OUT STRING, p_error OUT NUMBER)
+CREATE OR REPLACE PROCEDURE getUser(p_username IN STRING, p_user_id OUT NUMBER, p_password OUT STRING, p_error OUT NUMBER)
 IS
 BEGIN
     BEGIN
-        SELECT password
-        INTO p_password
-        FROM USERS
+        SELECT user_id, password
+        INTO p_user_id, p_password
+        FROM users
         WHERE username = p_username;
         p_error := 0;
     EXCEPTION

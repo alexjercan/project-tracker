@@ -49,8 +49,67 @@ BEGIN
         WHERE username = p_username;
         p_error := 0;
     EXCEPTION
-        WHEN NO_DATA_FOUND THEN
+        WHEN OTHERS THEN
         p_password := NULL;
+        p_error := 1;
+    END;
+END;
+/
+
+CREATE TABLE projects
+(
+    project_id  NUMBER(10) NOT NULL,
+    owner_id NUMBER(10) NOT NULL,
+    project_name VARCHAR2(60)
+);
+
+CREATE UNIQUE INDEX project_id_pk ON projects (project_id);
+
+ALTER TABLE projects
+    ADD (CONSTRAINT project_id_pk PRIMARY KEY (project_id));
+
+CREATE SEQUENCE projects_sequence;
+
+CREATE OR REPLACE TRIGGER projects_on_insert
+  BEFORE INSERT ON projects
+  FOR EACH ROW
+BEGIN
+  SELECT projects_sequence.nextval
+  INTO :new.project_id
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE insertProject(p_project_name IN STRING, p_owner_id IN NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
+IS
+BEGIN
+    BEGIN
+        INSERT INTO projects(project_name, owner_id)
+        VALUES (p_project_name, p_owner_id);
+
+        p_project_id := projects_sequence.currval;
+        p_error := 0;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+        p_error := 1;
+    END;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE getProject(p_project_name IN STRING, p_owner_id OUT NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
+IS
+BEGIN
+    BEGIN
+        SELECT owner_id, project_id
+        INTO p_owner_id, p_project_id
+        FROM projects
+        WHERE project_name = p_project_name;
+        p_error := 0;
+    EXCEPTION
+        WHEN OTHERS THEN
+        p_owner_id := NULL;
+        p_project_id := NULL;
         p_error := 1;
     END;
 END;

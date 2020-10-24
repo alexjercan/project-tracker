@@ -21,7 +21,7 @@ export default class Controller {
       const projectData = await this._service.CreateProject(projectInput);
       if (projectData === undefined) return res.status(401).send({ message: 'Invalid Project' });
 
-      req.body.project = projectData;
+      req.body.projects = [projectData];
       next();
     } catch (error) {
       return res.status(500).send({ message: error });

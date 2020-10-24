@@ -37,13 +37,15 @@ const createClickedHandler = async (
   const h = new Headers(headers);
   h.set("Content-Type", "application/json");
   h.append("Accept", "application/json")
-  h.forEach((value, key) => console.log(value + " " + key));
 
   const response = await fetch("/api/project/new", {
     method: "POST",
     headers: h,
     body: JSON.stringify(userInput),
   });
+
+  if (response.status !== 200) return undefined;
+  console.log(await response.json());
 };
 
 const getClickedHandler = async (

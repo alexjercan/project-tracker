@@ -4,7 +4,7 @@ import oracledb from 'oracledb';
 
 export default class Model {
   async Create(user: IUserInput): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ user_id: number, error: number }>(
+    const result = await oracledbWrapper.simpleExecute<{ user_id: number; error: number }>(
       `BEGIN insertUser(p_username => :p1, p_password => :p2, p_user_id => :user_id, p_error => :error); END;`,
       {
         p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: user.username },
@@ -18,11 +18,11 @@ export default class Model {
     if (error !== 0) return undefined;
     const user_id = result.outBinds?.user_id;
     if (user_id === undefined) return undefined;
-    return {user_id, ...user };
+    return { user_id, ...user };
   }
 
   async FindOne(username: string): Promise<IUser | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ user_id: number, password: string, error: number }>(
+    const result = await oracledbWrapper.simpleExecute<{ user_id: number; password: string; error: number }>(
       `BEGIN getUser(p_username => :p1, p_user_id => :user_id, p_password => :password, p_error => :error); END;`,
       {
         p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
@@ -39,6 +39,6 @@ export default class Model {
     const password = result.outBinds?.password;
     const user_id = result.outBinds?.user_id;
     if (user_id === undefined || password === undefined) return undefined;
-    return {user_id, username, password };
+    return { user_id, username, password };
   }
 }

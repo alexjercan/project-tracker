@@ -19,7 +19,7 @@ describe('Project Tests', () => {
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
             return undefined;
-          }
+          },
         };
 
         const userInput: IProjectInput = {
@@ -49,7 +49,7 @@ describe('Project Tests', () => {
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
             return undefined;
-          }
+          },
         };
 
         const service = new Service(model);
@@ -78,7 +78,7 @@ describe('Project Tests', () => {
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
             return undefined;
-          }
+          },
         };
 
         const service = new Service(model);
@@ -102,13 +102,73 @@ describe('Project Tests', () => {
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
             return undefined;
-          }
+          },
         };
 
         const service = new Service(model);
         const record = await service.GetProject(userInput);
 
         expect(record).toBeUndefined();
+      });
+    });
+    describe('GetProjects', () => {
+      it('Should return the records when the model finds records', async () => {
+        const userInput: IProjectInput = {
+          user_id: 1,
+          project_name: '',
+        };
+
+        const model: Model = {
+          async Create(project: IProjectInput): Promise<IProject | undefined> {
+            return undefined;
+          },
+          async FindOne(projectName: string): Promise<IProject | undefined> {
+            return undefined;
+          },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return [
+              {
+                owner_id: 1,
+                project_id: 1,
+                project_name: 'projectName1',
+              },
+              {
+                owner_id: 1,
+                project_id: 2,
+                project_name: 'projectName2',
+              },
+            ];
+          },
+        };
+
+        const service = new Service(model);
+        const records = await service.GetProjects(userInput);
+
+        expect(records).toBeDefined();
+        expect(records?.length).toBe(2);
+      });
+      it('Should return undefined when the model does not find a record', async () => {
+        const userInput: IProjectInput = {
+          user_id: 1,
+          project_name: '',
+        };
+
+        const model: Model = {
+          async Create(project: IProjectInput): Promise<IProject | undefined> {
+            return undefined;
+          },
+          async FindOne(projectName: string): Promise<IProject | undefined> {
+            return undefined;
+          },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return undefined;
+          },
+        };
+
+        const service = new Service(model);
+        const records = await service.GetProjects(userInput);
+
+        expect(records).toBeUndefined();
       });
     });
   });

@@ -46,6 +46,18 @@ const createClickedHandler = async (
   });
 };
 
+const getClickedHandler = async (
+  headers: Headers | undefined
+) => {
+  const response = await fetch("/api/project/getall", {
+    method: "GET",
+    headers: headers,
+  });
+
+  if (response.status !== 200) return undefined;
+  console.log(await response.json());
+};
+
 const Dashboard: React.FC<Props> = (props) => {
   const [responseValue, setResponseValue] = useState<IResponse | undefined>();
   const [projectNameValue, setProjectNameValue] = useState<string>("");
@@ -69,6 +81,9 @@ const Dashboard: React.FC<Props> = (props) => {
       >
         SignIn
       </button>
+      <button
+        onClick={() => getClickedHandler(props.headers)}
+      >AAAAAAAAAAA</button>
     </div>
   );
 };

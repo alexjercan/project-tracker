@@ -9,7 +9,7 @@ export interface IProjectInput {
 }
 
 export interface IProject {
-  owner_id: number;
   project_id: number;
+  owner_id: number;
   project_name: string;
 }

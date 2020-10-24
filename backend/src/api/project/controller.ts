@@ -15,7 +15,7 @@ export default class Controller {
     const user = verified.user as ITokenUser;
     const userInput: IUserInput = req.body;
 
-    const projectInput: IProjectInput = {user_id: user.user_id, project_name: userInput.project_name};
+    const projectInput: IProjectInput = { user_id: user.user_id, project_name: userInput.project_name };
 
     try {
       const projectData = await this._service.CreateProject(projectInput);
@@ -33,13 +33,31 @@ export default class Controller {
     const user = verified.user as ITokenUser;
     const userInput: IUserInput = req.body;
 
-    const projectInput: IProjectInput = {user_id: user.user_id, project_name: userInput.project_name};
+    const projectInput: IProjectInput = { user_id: user.user_id, project_name: userInput.project_name };
 
     try {
       const projectData = await this._service.GetProject(projectInput);
       if (projectData === undefined) return res.status(401).send({ message: 'Invalid Project' });
 
-      req.body.project = projectData;
+      req.body.projects = [projectData];
+      next();
+    } catch (error) {
+      return res.status(500).send({ message: error });
+    }
+  }
+
+  async GetProjects(req: Request, res: Response, next: NextFunction) {
+    const verified = req.body.verified as IVerified;
+    const user = verified.user as ITokenUser;
+    const userInput: IUserInput = req.body;
+
+    const projectInput: IProjectInput = { user_id: user.user_id, project_name: '' };
+
+    try {
+      const projectsData = await this._service.GetProjects(projectInput);
+      if (projectsData === undefined) return res.status(401).send({ message: 'Invalid Project' });
+
+      req.body.projects = projectsData;
       next();
     } catch (error) {
       return res.status(500).send({ message: error });

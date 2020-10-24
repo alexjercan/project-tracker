@@ -131,26 +131,21 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE PROCEDURE getProjects(p_user_id IN NUMBER, p_ref_projects OUT SYS_REFCURSOR, p_error OUT NUMBER)
-IS
-    v_project_id projects.project_id%TYPE;
-    v_owner_id projects.owner_id%TYPE;
-    v_project_name projects.project_name%TYPE;
+CREATE OR REPLACE PROCEDURE getProjects(p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR, p_error OUT NUMBER)
+IS 
 BEGIN
-    BEGIN
-        OPEN p_ref_projects FOR
-            SELECT project_id, p.owner_id, p.project_name
-            INTO v_project_id, v_owner_id, v_project_name
-            FROM projects p
-                NATURAL JOIN contributors c
-            WHERE p_user_id = c.user_id;
-        p_error := 0;
-    EXCEPTION
-        WHEN OTHERS THEN
-        p_error := 1;
-    END;
+    OPEN p_cursor FOR 
+        SELECT project_id, p.owner_id, p.project_name
+        FROM projects p
+            NATURAL JOIN contributors c
+        WHERE p_user_id = c.user_id;
+    p_error := 0;    
+EXCEPTION
+    WHEN OTHERS THEN
+    p_error := 1;        
 END;
 /
 
 COMMIT;
+
 

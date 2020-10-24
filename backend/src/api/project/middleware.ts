@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { IProject } from './types';
 
 export const projectSuccess = (req: Request, res: Response, next: NextFunction) => {
-  const data = req.body.project as IProject;
+  const projects = req.body.projects as IProject[];
 
-  res.status(200).send({project_name: data.project_name});
+  const projectNames = projects.map((project) => ({ project_name: project.project_name }));
+
+  res.status(200).send({ projects: projectNames });
   next();
 };

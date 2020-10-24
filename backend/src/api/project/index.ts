@@ -5,17 +5,17 @@ import Service from './service';
 import { projectSuccess } from './middleware';
 
 const project = () => {
-    const model = new Model()
-    const service = new Service(model);
-    const controller = new Controller(service);
+  const model = new Model();
+  const service = new Service(model);
+  const controller = new Controller(service);
 
-    const router = Router();
+  const router = Router();
 
-    router.post('/new', controller.CreateProject.bind(controller), projectSuccess);
-    router.get('/getone', controller.GetProject.bind(controller), projectSuccess);
-    
+  router.post('/new', controller.CreateProject.bind(controller), projectSuccess);
+  router.get('/getone', controller.GetProject.bind(controller), projectSuccess);
+  router.get('/getall', controller.GetProjects.bind(controller), projectSuccess);
 
-    return router;
+  return router;
 };
 
 export default project;

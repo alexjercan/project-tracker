@@ -5,8 +5,8 @@ import { dotenv } from '../config';
 
 export const authSuccess = (req: Request, res: Response, next: NextFunction) => {
   const u = req.body.user as IUser;
-  const user: ITokenUser = {user_id: u.user_id, username: u.username};
-  const token = sign({user}, dotenv.auth.secret);
+  const user: ITokenUser = { user_id: u.user_id, username: u.username };
+  const token = sign({ user }, dotenv.auth.secret);
 
   res.status(200).header(dotenv.auth.token, token).send('Authentication Successful');
   next();

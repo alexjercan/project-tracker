@@ -11,7 +11,7 @@ export default class Model {
         user_id: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
         error: { dir: oracledbWrapper.BIND_OUT, type: oracledbWrapper.NUMBER },
       },
-      {},
+      { autoCommit: true },
     );
     const error = result.outBinds?.error;
     if (error !== 0) return undefined;

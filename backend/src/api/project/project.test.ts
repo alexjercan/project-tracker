@@ -14,7 +14,7 @@ describe('Project Tests', () => {
               ...project,
             };
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -44,7 +44,7 @@ describe('Project Tests', () => {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -69,11 +69,11 @@ describe('Project Tests', () => {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return {
-              owner_id: 1,
+              owner_id: projectInput.user_id,
               project_id: 1,
-              project_name: projectName,
+              project_name: projectInput.project_name,
             };
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -86,6 +86,7 @@ describe('Project Tests', () => {
 
         expect(record).toBeDefined();
         expect(record?.project_name).toBe(userInput.project_name);
+        expect(record?.owner_id).toBe(userInput.user_id);
       });
       it('Should return undefined when the model does not find a record', async () => {
         const userInput: IProjectInput = {
@@ -97,7 +98,7 @@ describe('Project Tests', () => {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -122,7 +123,7 @@ describe('Project Tests', () => {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -157,7 +158,7 @@ describe('Project Tests', () => {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
-          async FindOne(projectName: string): Promise<IProject | undefined> {
+          async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
             return undefined;
           },
           async FindAll(userId: number): Promise<IProject[] | undefined> {

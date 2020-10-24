@@ -113,18 +113,18 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE PROCEDURE getProject(p_project_name IN STRING, p_owner_id OUT NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
+CREATE OR REPLACE PROCEDURE getProject(p_project_name IN STRING, p_user_id IN NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
 IS
 BEGIN
     BEGIN
-        SELECT owner_id, project_id
-        INTO p_owner_id, p_project_id
+        SELECT project_id
+        INTO p_project_id
         FROM projects
-        WHERE project_name = p_project_name;
+        WHERE project_name = p_project_name
+              AND owner_id = p_user_id;
         p_error := 0;
     EXCEPTION
         WHEN OTHERS THEN
-        p_owner_id := NULL;
         p_project_id := NULL;
         p_error := 1;
     END;
@@ -132,6 +132,20 @@ END;
 /
 
 CREATE OR REPLACE PROCEDURE getProjects(p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR, p_error OUT NUMBER)
+IS 
+BEGIN
+    OPEN p_cursor FOR 
+        SELECT p.project_id, p.owner_id, p.project_name
+        FROM projects p
+        WHERE p_user_id = p.owner_id;
+    p_error := 0;    
+EXCEPTION
+    WHEN OTHERS THEN
+    p_error := 1;        
+END;
+/
+
+CREATE OR REPLACE PROCEDURE getContributedProjects(p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR, p_error OUT NUMBER)
 IS 
 BEGIN
     OPEN p_cursor FOR 

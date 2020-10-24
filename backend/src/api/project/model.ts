@@ -15,33 +15,36 @@ export default class Model {
       { autoCommit: true },
     );
 
-    const error = result.outBinds?.error;
+    if (result.outBinds === undefined) return undefined;
+
+    const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    const project_id = result.outBinds?.project_id;
+    const project_id = result.outBinds.project_id;
     if (project_id === undefined) return undefined;
     return { project_id, owner_id: project.user_id, ...project };
   }
 
-  async FindOne(projectName: string): Promise<IProject | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ owner_id: number; project_id: number; error: number }>(
-      `BEGIN getProject(p_project_name => :p1, p_owner_id => :owner_id, p_project_id => :project_id, p_error => :error); END;`,
+  async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
+    const result = await oracledbWrapper.simpleExecute<{ project_id: number; error: number }>(
+      `BEGIN getProject(p_project_name => :p1, p_user_id => :user_id, p_project_id => :project_id, p_error => :error); END;`,
       {
-        p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
-        owner_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectInput.project_name },
+        user_id: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: projectInput.user_id },
         project_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       {},
     );
 
-    const error = result.outBinds?.error;
+    if (result.outBinds === undefined) return undefined;
+
+    const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    const owner_id = result.outBinds?.owner_id;
-    const project_id = result.outBinds?.project_id;
-    if (owner_id === undefined || project_id === undefined) return undefined;
-    return { owner_id, project_id, project_name: projectName };
+    const project_id = result.outBinds.project_id;
+    if (project_id === undefined) return undefined;
+    return { owner_id: projectInput.user_id, project_id, project_name: projectInput.project_name };
   }
 
   async FindAll(userId: number): Promise<IProject[] | undefined> {

@@ -17,6 +17,9 @@ describe('Project Tests', () => {
           async FindOne(projectName: string): Promise<IProject | undefined> {
             return undefined;
           },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return undefined;
+          }
         };
 
         const userInput: IProjectInput = {
@@ -44,6 +47,9 @@ describe('Project Tests', () => {
           async FindOne(projectName: string): Promise<IProject | undefined> {
             return undefined;
           },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return undefined;
+          }
         };
 
         const service = new Service(model);
@@ -70,6 +76,9 @@ describe('Project Tests', () => {
               project_name: projectName,
             };
           },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return undefined;
+          }
         };
 
         const service = new Service(model);
@@ -91,6 +100,9 @@ describe('Project Tests', () => {
           async FindOne(projectName: string): Promise<IProject | undefined> {
             return undefined;
           },
+          async FindAll(userId: number): Promise<IProject[] | undefined> {
+            return undefined;
+          }
         };
 
         const service = new Service(model);

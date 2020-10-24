@@ -1,6 +1,7 @@
 import Service from './service';
 import { IUser, IUserInput } from './types';
 import Model from './model';
+import bcrypt from 'bcrypt';
 
 describe('Auth Tests', () => {
   describe('User Service Tests', () => {
@@ -28,7 +29,7 @@ describe('Auth Tests', () => {
 
         expect(userRecord).toBeDefined();
         expect(userRecord?.username).toBe(userInput.username);
-        expect(userRecord?.password).toBe(userInput.password);
+        if (userRecord) expect(await bcrypt.compare(userInput.password, userRecord.password)).toBe(true);
       });
       it('Should return undefined when the model does not create a record', async () => {
         const model: Model = {
@@ -58,6 +59,8 @@ describe('Auth Tests', () => {
           password: 'password',
         };
 
+        const encryptedPassword = await bcrypt.hash(userInput.password, 5);
+
         const model: Model = {
           async Create(user: IUserInput): Promise<IUser | undefined> {
             return undefined;
@@ -66,7 +69,7 @@ describe('Auth Tests', () => {
             return {
               user_id: 1,
               username,
-              password: userInput.password,
+              password: encryptedPassword,
             };
           },
         };
@@ -76,7 +79,7 @@ describe('Auth Tests', () => {
 
         expect(userRecord).toBeDefined();
         expect(userRecord?.username).toBe(userInput.username);
-        expect(userRecord?.password).toBe(userInput.password);
+        if (userRecord) expect(await bcrypt.compare(userInput.password, userRecord.password)).toBe(true);
       });
       it('Should return undefined when the model finds a record but the passwords dont match', async () => {
         const userInput: IUserInput = {

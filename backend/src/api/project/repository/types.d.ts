@@ -3,6 +3,11 @@
   username: string;
 }
 
+export interface IProjectInput {
+  user_id: number;
+  project_name: string;
+}
+
 export interface IRepositoryInput {
   user_id: number;
   project_name: string;

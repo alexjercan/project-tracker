@@ -9,8 +9,7 @@ describe('Project Tests', () => {
         const model: Model = {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
             return {
-              project_id: 1,
-              ...project,
+                project_name: project.project_name,
             };
           },
           async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
@@ -70,11 +69,9 @@ describe('Project Tests', () => {
           async FindAll(userId: number): Promise<IProject[] | undefined> {
             return [
               {
-                project_id: 1,
                 project_name: 'projectName1',
               },
               {
-                project_id: 2,
                 project_name: 'projectName2',
               },
             ];

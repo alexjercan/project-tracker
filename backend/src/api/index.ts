@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { ensureAuthenticated } from './middleware';
 import Service from './service';
 import project from './project';
+import profile from './profile';
 
 const api = () => {
   const service = new Service();
@@ -12,6 +13,7 @@ const api = () => {
 
   router.use(ensureAuthenticated);
 
+  router.use('/profile', profile());
   router.use('/project', project());
   router.get('/', controller.ShowName.bind(controller));
 

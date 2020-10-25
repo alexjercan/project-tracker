@@ -49,12 +49,9 @@ export default class Controller {
   async GetProjects(req: Request, res: Response, next: NextFunction) {
     const verified = req.body.verified as IVerified;
     const user = verified.user as ITokenUser;
-    const userInput: IUserInput = req.body;
-
-    const projectInput: IProjectInput = { user_id: user.user_id, project_name: '' };
 
     try {
-      const projectsData = await this._service.GetProjects(projectInput);
+      const projectsData = await this._service.GetProjects(user.user_id);
       if (projectsData === undefined) return res.status(401).send({ message: 'Invalid Project' });
 
       req.body.projects = projectsData;

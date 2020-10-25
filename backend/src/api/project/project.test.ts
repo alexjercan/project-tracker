@@ -143,7 +143,7 @@ describe('Project Tests', () => {
         };
 
         const service = new Service(model);
-        const records = await service.GetProjects(userInput);
+        const records = await service.GetProjects(userInput.user_id);
 
         expect(records).toBeDefined();
         expect(records?.length).toBe(2);
@@ -167,7 +167,7 @@ describe('Project Tests', () => {
         };
 
         const service = new Service(model);
-        const records = await service.GetProjects(userInput);
+        const records = await service.GetProjects(userInput.user_id);
 
         expect(records).toBeUndefined();
       });

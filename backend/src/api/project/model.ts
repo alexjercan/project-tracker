@@ -27,10 +27,10 @@ export default class Model {
 
   async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ project_id: number; error: number }>(
-      `BEGIN getProject(p_project_name => :p1, p_user_id => :user_id, p_project_id => :project_id, p_error => :error); END;`,
+      `BEGIN getProject(p_project_name => :p1, p_user_id => :p2, p_project_id => :project_id, p_error => :error); END;`,
       {
         p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectInput.project_name },
-        user_id: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: projectInput.user_id },
+        p2: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: projectInput.user_id },
         project_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },

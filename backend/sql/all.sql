@@ -1,165 +1,230 @@
-CREATE TABLE users (
-    user_id  NUMBER(10),
-    username VARCHAR2(60),
-    password VARCHAR2(1024)
+create table users
+(
+    user_id  number(10),
+    username varchar2(60),
+    password varchar2(1024)
 );
 
-CREATE UNIQUE INDEX user_id_pk ON users (user_id);
+create unique index user_id_pk on users (user_id);
 
-ALTER TABLE users ADD (
-    CONSTRAINT user_id_pk PRIMARY KEY (user_id)
+alter table users
+    add (
+        constraint user_id_pk primary key (user_id)
+        );
+
+create table projects
+(
+    project_id   number(10),
+    owner_id     number(10),
+    project_name varchar2(60)
 );
 
-CREATE TABLE projects (
-    project_id  NUMBER(10),
-    owner_id NUMBER(10),
-    project_name VARCHAR2(60)
+create unique index project_id_pk on projects (project_id);
+
+alter table projects
+    add (
+        constraint project_id_pk primary key (project_id),
+        constraint project_owner_id_fk foreign key (owner_id) references users (user_id)
+        );
+
+create table contributors
+(
+    project_id number(10),
+    user_id    number(10)
 );
 
-CREATE UNIQUE INDEX project_id_pk ON projects (project_id);
+create unique index contributors_id_pk on contributors (project_id, user_id);
 
-ALTER TABLE projects ADD (
-    CONSTRAINT project_id_pk PRIMARY KEY (project_id),
-    CONSTRAINT project_owner_id_fk FOREIGN KEY(owner_id) REFERENCES users(user_id)
+alter table contributors
+    add (
+        constraint contributors_id_pk primary key (project_id, user_id),
+        constraint contributors_project_id_fk foreign key (project_id) references projects (project_id),
+        constraint contributors_user_id_fk foreign key (user_id) references users (user_id)
+        );
+
+create table profiles
+(
+    user_id    number(10),
+    first_name varchar2(30),
+    last_name  varchar2(30),
+    email      varchar2(30)
 );
 
-CREATE TABLE contributors (
-    project_id  NUMBER(10),
-    user_id NUMBER(10)
-);
+create unique index profiles_user_id_pk on profiles (user_id);
 
-CREATE UNIQUE INDEX contributors_id_pk ON contributors (project_id, user_id);
+alter table profiles
+    add (
+        constraint profiles_user_id_pk primary key (user_id),
+        constraint profiles_user_id_fk foreign key (user_id) references users (user_id)
+        );
 
-ALTER TABLE contributors ADD (
-    CONSTRAINT contributors_id_pk PRIMARY KEY (project_id, user_id),
-    CONSTRAINT contributors_project_id_fk FOREIGN KEY(project_id) REFERENCES projects(project_id),
-    CONSTRAINT contributors_user_id_fk FOREIGN KEY(user_id) REFERENCES users(user_id)
-);
+create sequence users_sequence;
 
-CREATE SEQUENCE users_sequence;
-
-CREATE OR REPLACE TRIGGER users_on_insert
-  BEFORE INSERT ON users
-  FOR EACH ROW
-BEGIN
-  SELECT users_sequence.nextval
-  INTO :new.user_id
-  FROM dual;
-END;
+create or replace trigger users_on_insert
+    before insert
+    on users
+    for each row
+begin
+    select users_sequence.nextval
+    into :NEW.user_id
+    from dual;
+end;
 /
 
-CREATE SEQUENCE projects_sequence;
+create sequence projects_sequence;
 
-CREATE OR REPLACE TRIGGER projects_on_insert
-  BEFORE INSERT ON projects
-  FOR EACH ROW
-BEGIN
-  SELECT projects_sequence.nextval
-  INTO :new.project_id
-  FROM dual;
-END;
+create or replace trigger projects_on_insert
+    before insert
+    on projects
+    for each row
+begin
+    select projects_sequence.nextval
+    into :NEW.project_id
+    from dual;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE insertUser(p_username IN STRING, p_password IN STRING, p_user_id OUT NUMBER, p_error OUT NUMBER)
-IS
-BEGIN
-    BEGIN
-        INSERT INTO users(username, password)
-        VALUES (p_username, p_password);
+create or replace procedure insertUser(p_username in string, p_password in string, p_user_id out number,
+                                       p_error out number)
+    is
+begin
+    begin
+        insert into users(username, password)
+        values (p_username, p_password);
 
         p_user_id := users_sequence.currval;
+
+        insert into profiles(user_id)
+        values (p_user_id);
+
         p_error := 0;
-    EXCEPTION
-        WHEN OTHERS THEN
-        p_error := 1;
-    END;
-END;
+    exception
+        when others then
+            p_error := 1;
+    end;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE getUser(p_username IN STRING, p_user_id OUT NUMBER, p_password OUT STRING, p_error OUT NUMBER)
-IS
-BEGIN
-    BEGIN
-        SELECT user_id, password
-        INTO p_user_id, p_password
-        FROM users
-        WHERE username = p_username;
+create or replace procedure getUser(p_username in string, p_user_id out number, p_password out string,
+                                    p_error out number)
+    is
+begin
+    begin
+        select user_id, password
+        into p_user_id, p_password
+        from users
+        where username = p_username;
         p_error := 0;
-    EXCEPTION
-        WHEN OTHERS THEN
-        p_password := NULL;
-        p_error := 1;
-    END;
-END;
+    exception
+        when others then
+            p_password := null;
+            p_error := 1;
+    end;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE insertProject(p_project_name IN STRING, p_owner_id IN NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
-IS
-BEGIN
-    BEGIN
-        INSERT INTO projects(project_name, owner_id)
-        VALUES (p_project_name, p_owner_id);
+create or replace procedure insertProject(p_project_name in string, p_owner_id in number, p_project_id out number,
+                                          p_error out number)
+    is
+begin
+    begin
+        insert into projects(project_name, owner_id)
+        values (p_project_name, p_owner_id);
 
         p_project_id := projects_sequence.currval;
 
-        INSERT INTO contributors(project_id, user_id)
-        VALUES (p_project_id, p_owner_id);
+        insert into contributors(project_id, user_id)
+        values (p_project_id, p_owner_id);
 
         p_error := 0;
-    EXCEPTION
-        WHEN OTHERS THEN
-        p_error := 1;
-    END;
-END;
+    exception
+        when others then
+            p_error := 1;
+    end;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE getProject(p_project_name IN STRING, p_user_id IN NUMBER, p_project_id OUT NUMBER, p_error OUT NUMBER)
-IS
-BEGIN
-    BEGIN
-        SELECT project_id
-        INTO p_project_id
-        FROM projects
-        WHERE project_name = p_project_name
-              AND owner_id = p_user_id;
+create or replace procedure getProject(p_project_name in string, p_user_id in number, p_project_id out number,
+                                       p_error out number)
+    is
+begin
+    begin
+        select project_id
+        into p_project_id
+        from projects
+        where project_name = p_project_name
+          and owner_id = p_user_id;
         p_error := 0;
-    EXCEPTION
-        WHEN OTHERS THEN
-        p_project_id := NULL;
+    exception
+        when others then
+            p_project_id := null;
+            p_error := 1;
+    end;
+end;
+/
+
+create or replace procedure getProjects(p_user_id in number, p_cursor out sys_refcursor, p_error out number)
+    is
+begin
+    open p_cursor for
+        select p.project_id, p.owner_id, p.project_name
+        from projects p
+        where p_user_id = p.owner_id;
+    p_error := 0;
+exception
+    when others then
         p_error := 1;
-    END;
-END;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE getProjects(p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR, p_error OUT NUMBER)
-IS 
-BEGIN
-    OPEN p_cursor FOR 
-        SELECT p.project_id, p.owner_id, p.project_name
-        FROM projects p
-        WHERE p_user_id = p.owner_id;
-    p_error := 0;    
-EXCEPTION
-    WHEN OTHERS THEN
-    p_error := 1;        
-END;
+create or replace procedure getContributedProjects(p_user_id in number, p_cursor out sys_refcursor, p_error out number)
+    is
+begin
+    open p_cursor for
+        select project_id, p.owner_id, p.project_name
+        from projects p
+                 natural join contributors c
+        where p_user_id = c.user_id;
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
 /
 
-CREATE OR REPLACE PROCEDURE getContributedProjects(p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR, p_error OUT NUMBER)
-IS 
-BEGIN
-    OPEN p_cursor FOR 
-        SELECT project_id, p.owner_id, p.project_name
-        FROM projects p
-            NATURAL JOIN contributors c
-        WHERE p_user_id = c.user_id;
-    p_error := 0;    
-EXCEPTION
-    WHEN OTHERS THEN
-    p_error := 1;        
-END;
+create or replace procedure editProfile(p_user_id in number, p_first_name in string, p_last_name in string,
+                                        p_email in string, p_error out number)
+    is
+begin
+    update profiles
+    set first_name=p_first_name,
+        last_name=p_last_name,
+        email=p_email
+    where p_user_id = user_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
 /
 
-COMMIT;
+create or replace procedure getProfile(p_user_id in number, p_first_name out string, p_last_name out string,
+                                       p_email out string, p_error out number)
+    is
+begin
+    select first_name, last_name, email
+    into p_first_name, p_last_name, p_email
+    from profiles
+    where p_user_id = user_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
+commit;
 
 

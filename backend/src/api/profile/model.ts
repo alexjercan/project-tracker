@@ -21,7 +21,7 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...profile };
+    return { email: profile.email, last_name: profile.last_name, first_name: profile.first_name };
   }
 
   async Get(userId: number): Promise<IProfile | undefined> {
@@ -47,6 +47,10 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...result.outBinds };
+    return {
+      email: result.outBinds.email,
+      first_name: result.outBinds.first_name,
+      last_name: result.outBinds.last_name,
+    };
   }
 }

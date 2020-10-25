@@ -51,7 +51,7 @@ const createClickedHandler = async (
 const getClickedHandler = async (
   headers: Headers | undefined
 ) => {
-  const response = await fetch("/api/project/getall", {
+  const response = await fetch("/api/project/getAll", {
     method: "GET",
     headers: headers,
   });

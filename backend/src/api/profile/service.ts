@@ -6,10 +6,7 @@ export default class Service {
 
   async EditProfile(profileInput: IProfileInput): Promise<IProfile | undefined> {
     try {
-      const record = await this._model.Edit(profileInput);
-      if (record === undefined) return undefined;
-
-      return record;
+      return await this._model.Edit(profileInput);
     } catch (error) {
       throw error;
     }
@@ -17,10 +14,7 @@ export default class Service {
 
   async GetProfile(userId: number): Promise<IProfile | undefined> {
     try {
-      const record = await this._model.Get(userId);
-      if (record === undefined) return undefined;
-
-      return record;
+      return await this._model.Get(userId);
     } catch (error) {
       throw error;
     }

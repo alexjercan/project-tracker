@@ -11,9 +11,9 @@ const project = () => {
 
   const router = Router();
 
-  router.post('/new', controller.CreateProject.bind(controller), projectSuccess);
-  router.get('/getone', controller.GetProject.bind(controller), projectSuccess);
-  router.get('/getall', controller.GetProjects.bind(controller), projectSuccess);
+  router.post('/', controller.CreateProject.bind(controller), projectSuccess);
+  router.get('/', controller.GetProjects.bind(controller), projectSuccess);
+  router.get('/getOne', controller.GetProject.bind(controller), projectSuccess);
 
   return router;
 };

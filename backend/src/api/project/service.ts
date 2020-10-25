@@ -9,10 +9,7 @@ export default class Service {
       const record = await this._model.FindOne(projectInput);
       if (record !== undefined) return undefined;
 
-      const createdRecord = await this._model.Create(projectInput);
-      if (createdRecord === undefined) return undefined;
-
-      return createdRecord;
+      return await this._model.Create(projectInput);
     } catch (error) {
       throw error;
     }
@@ -20,10 +17,7 @@ export default class Service {
 
   async GetProject(projectInput: IProjectInput): Promise<IProject | undefined> {
     try {
-      const record = await this._model.FindOne(projectInput);
-      if (record === undefined) return undefined;
-
-      return record;
+      return await this._model.FindOne(projectInput);
     } catch (error) {
       throw error;
     }

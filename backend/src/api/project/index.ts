@@ -16,7 +16,6 @@ const project = () => {
 
   router.post('/', controller.CreateProject.bind(controller), projectSuccess);
   router.get('/', controller.GetProjects.bind(controller), projectSuccess);
-  router.get('/getOne', controller.GetProject.bind(controller), projectSuccess);
 
   return router;
 };

@@ -11,11 +11,11 @@ export default class Controller {
   constructor(private _service: Service) {}
 
   async CreateProject(req: Request, res: Response, next: NextFunction) {
-    const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
-    const userInput: IUserInput = req.body;
+    const { user }: IVerified = req.body.verified as IVerified;
+    const { user_id }: ITokenUser = user as ITokenUser;
+    const { project_name }: IUserInput = req.body;
 
-    const projectInput: IProjectInput = { user_id: user.user_id, project_name: userInput.project_name };
+    const projectInput: IProjectInput = { user_id, project_name };
 
     try {
       const projectData = await this._service.CreateProject(projectInput);
@@ -28,30 +28,12 @@ export default class Controller {
     }
   }
 
-  async GetProject(req: Request, res: Response, next: NextFunction) {
-    const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
-    const userInput: IUserInput = req.body;
-
-    const projectInput: IProjectInput = { user_id: user.user_id, project_name: userInput.project_name };
-
-    try {
-      const projectData = await this._service.GetProject(projectInput);
-      if (projectData === undefined) return res.status(401).send({ message: 'Invalid Project' });
-
-      req.body.projects = [projectData];
-      next();
-    } catch (error) {
-      return res.status(500).send({ message: error });
-    }
-  }
-
   async GetProjects(req: Request, res: Response, next: NextFunction) {
-    const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
+    const { user }: IVerified = req.body.verified as IVerified;
+    const { user_id }: ITokenUser = user as ITokenUser;
 
     try {
-      const projectsData = await this._service.GetProjects(user.user_id);
+      const projectsData = await this._service.GetProjects(user_id);
       if (projectsData === undefined) return res.status(401).send({ message: 'Invalid Project' });
 
       req.body.projects = projectsData;

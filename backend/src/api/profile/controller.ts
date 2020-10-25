@@ -13,11 +13,11 @@ export default class Controller {
   constructor(private _service: Service) {}
 
   async EditProfile(req: Request, res: Response, next: NextFunction) {
-    const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
+    const { user }: IVerified = req.body.verified as IVerified;
+    const { user_id }: ITokenUser = user as ITokenUser;
     const { email, first_name, last_name }: IUserInput = req.body;
 
-    const profileInput: IProfileInput = { email, first_name, last_name, user_id: user.user_id };
+    const profileInput: IProfileInput = { email, first_name, last_name, user_id: user_id };
 
     try {
       const profileData = await this._service.EditProfile(profileInput);
@@ -31,11 +31,11 @@ export default class Controller {
   }
 
   async GetProfile(req: Request, res: Response, next: NextFunction) {
-    const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
+    const { user }: IVerified = req.body.verified as IVerified;
+    const { user_id }: ITokenUser = user as ITokenUser;
 
     try {
-      const profileData = await this._service.GetProfile(user.user_id);
+      const profileData = await this._service.GetProfile(user_id);
       if (profileData === undefined) return res.status(401).send({ message: 'Invalid Profile' });
 
       req.body.profile = profileData;

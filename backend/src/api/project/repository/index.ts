@@ -2,7 +2,7 @@
 import Model from './model';
 import Service from './service';
 import Controller from './controller';
-import {repositorySuccess} from "./middleware";
+import { repositorySuccess } from './middleware';
 
 const repository = () => {
   const model = new Model();

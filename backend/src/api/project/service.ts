@@ -15,20 +15,9 @@ export default class Service {
     }
   }
 
-  async GetProject(projectInput: IProjectInput): Promise<IProject | undefined> {
-    try {
-      return await this._model.FindOne(projectInput);
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async GetProjects(userId: number): Promise<IProject[] | undefined> {
     try {
-      const records = await this._model.FindAll(userId);
-      if (records === undefined) return undefined;
-
-      return records;
+      return await this._model.FindAll(userId);
     } catch (error) {
       throw error;
     }

@@ -1,7 +1,7 @@
 import Service from './service';
 import { IUser, IUserInput } from './types';
 import Model from './model';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 describe('Auth Tests', () => {
   describe('User Service Tests', () => {

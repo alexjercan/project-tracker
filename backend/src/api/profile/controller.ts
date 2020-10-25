@@ -17,7 +17,7 @@ export default class Controller {
     const user = verified.user as ITokenUser;
     const userInput: IUserInput = req.body;
 
-    const profileInput: IProfileInput = { user_id: user.user_id, ...userInput};
+    const profileInput: IProfileInput = { user_id: user.user_id, ...userInput };
 
     try {
       const profileData = await this._service.EditProfile(profileInput);

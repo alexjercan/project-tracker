@@ -114,10 +114,7 @@ describe('Project Tests', () => {
     });
     describe('GetProjects', () => {
       it('Should return the records when the model finds records', async () => {
-        const userInput: IProjectInput = {
-          user_id: 1,
-          project_name: '',
-        };
+        const userId = 1;
 
         const model: Model = {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
@@ -143,16 +140,13 @@ describe('Project Tests', () => {
         };
 
         const service = new Service(model);
-        const records = await service.GetProjects(userInput.user_id);
+        const records = await service.GetProjects(userId);
 
         expect(records).toBeDefined();
         expect(records?.length).toBe(2);
       });
       it('Should return undefined when the model does not find a record', async () => {
-        const userInput: IProjectInput = {
-          user_id: 1,
-          project_name: '',
-        };
+        const userId = 1;
 
         const model: Model = {
           async Create(project: IProjectInput): Promise<IProject | undefined> {
@@ -167,7 +161,7 @@ describe('Project Tests', () => {
         };
 
         const service = new Service(model);
-        const records = await service.GetProjects(userInput.user_id);
+        const records = await service.GetProjects(userId);
 
         expect(records).toBeUndefined();
       });

@@ -10,6 +10,5 @@ export interface IProjectInput {
 
 export interface IProject {
   project_id: number;
-  owner_id: number;
   project_name: string;
 }

@@ -167,7 +167,7 @@ create or replace procedure getProjects(p_user_id in number, p_cursor out sys_re
     is
 begin
     open p_cursor for
-        select p.project_id, p.owner_id, p.project_name
+        select p.project_id, p.project_name
         from projects p
         where p_user_id = p.owner_id;
     p_error := 0;

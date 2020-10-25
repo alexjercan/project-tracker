@@ -22,7 +22,7 @@ export default class Model {
 
     const project_id = result.outBinds.project_id;
     if (project_id === undefined) return undefined;
-    return { project_id, owner_id: project.user_id, ...project };
+    return { project_id, project_name: project.project_name };
   }
 
   async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
@@ -44,7 +44,7 @@ export default class Model {
 
     const project_id = result.outBinds.project_id;
     if (project_id === undefined) return undefined;
-    return { owner_id: projectInput.user_id, project_id, project_name: projectInput.project_name };
+    return { project_id, project_name: projectInput.project_name };
   }
 
   async FindAll(userId: number): Promise<IProject[] | undefined> {
@@ -52,8 +52,7 @@ export default class Model {
       if (record === undefined) return undefined;
       return {
         project_id: record[0],
-        owner_id: record[1],
-        project_name: record[2],
+        project_name: record[1],
       };
     };
 

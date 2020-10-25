@@ -4,12 +4,11 @@ import oracledb from 'oracledb';
 
 export default class Model {
   async Create(project: IProjectInput): Promise<IProject | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ project_id: number; error: number }>(
-      `BEGIN insertProject(p_project_name => :p1, p_owner_id => :p2, p_project_id => :project_id, p_error => :error); END;`,
+    const result = await oracledbWrapper.simpleExecute<{ error: number }>(
+      `BEGIN insertProject(p_project_name => :p1, p_owner_id => :p2, p_error => :error); END;`,
       {
         p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: project.project_name },
         p2: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: project.user_id },
-        project_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -20,9 +19,7 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    const project_id = result.outBinds.project_id;
-    if (project_id === undefined) return undefined;
-    return { project_id, project_name: project.project_name };
+    return { project_name: project.project_name };
   }
 
   async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
@@ -44,15 +41,14 @@ export default class Model {
 
     const project_id = result.outBinds.project_id;
     if (project_id === undefined) return undefined;
-    return { project_id, project_name: projectInput.project_name };
+    return { project_name: projectInput.project_name };
   }
 
   async FindAll(userId: number): Promise<IProject[] | undefined> {
     const rowToObject = (record: any[]): IProject | undefined => {
       if (record === undefined) return undefined;
       return {
-        project_id: record[0],
-        project_name: record[1],
+        project_name: record[0],
       };
     };
 

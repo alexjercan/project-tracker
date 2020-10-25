@@ -9,6 +9,5 @@ export interface IProjectInput {
 }
 
 export interface IProject {
-  project_id: number;
   project_name: string;
 }

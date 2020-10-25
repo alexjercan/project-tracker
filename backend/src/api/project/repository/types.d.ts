@@ -1,5 +1,11 @@
-﻿export interface IRepositoryInput {
-  project_id: number;
+﻿export interface ITokenUser {
+  user_id: number;
+  username: string;
+}
+
+export interface IRepositoryInput {
+  user_id: number;
+  project_name: string;
   description: string;
   progress: string;
   deadline: string;

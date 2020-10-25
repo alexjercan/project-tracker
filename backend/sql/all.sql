@@ -5,11 +5,11 @@ create table users
     password varchar2(1024)
 );
 
-create unique index user_id_pk on users (user_id);
+create unique index users_user_id_pk on users (user_id);
 
 alter table users
     add (
-        constraint user_id_pk primary key (user_id)
+        constraint users_user_id_pk primary key (user_id)
         );
 
 create table projects
@@ -19,12 +19,13 @@ create table projects
     project_name varchar2(60)
 );
 
-create unique index project_id_pk on projects (project_id);
+create unique index projects_project_id_pk on projects (project_id);
 
 alter table projects
     add (
-        constraint project_id_pk primary key (project_id),
-        constraint project_owner_id_fk foreign key (owner_id) references users (user_id)
+        constraint projects_project_id_pk primary key (project_id),
+        constraint projects_owner_id_fk foreign key (owner_id) references users (user_id),
+        constraint projects_unique_name unique (owner_id, project_name)
         );
 
 create table contributors
@@ -56,6 +57,24 @@ alter table profiles
     add (
         constraint profiles_user_id_pk primary key (user_id),
         constraint profiles_user_id_fk foreign key (user_id) references users (user_id)
+        );
+
+create table repositories
+(
+    project_id    number(10),
+    description   varchar2(1024),
+    progress      varchar2(1024),
+    started       date,
+    deadline      date,
+    last_modified date
+);
+
+create unique index repositories_project_id_pk on repositories (project_id);
+
+alter table repositories
+    add (
+        constraint repositories_project_id_pk primary key (project_id),
+        constraint repositories_project_id_fk foreign key (project_id) references projects (project_id)
         );
 
 create sequence users_sequence;
@@ -135,6 +154,9 @@ begin
 
         insert into contributors(project_id, user_id)
         values (p_project_id, p_owner_id);
+
+        insert into repositories(project_id, started, last_modified)
+        values (p_project_id, sysdate, sysdate);
 
         p_error := 0;
     exception
@@ -225,6 +247,38 @@ exception
 end;
 /
 
-commit;
+create or replace procedure editRepository(p_project_id in number, p_description in string, p_progress in string,
+                                           p_deadline in date, p_error out number)
+    is
+begin
+    update repositories
+    set description=p_description,
+        progress=p_progress,
+        deadline=p_deadline,
+        last_modified=sysdate
+    where p_project_id = project_id;
 
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
+create or replace procedure getRepository(p_project_id in number, p_description out string, p_progress out string,
+                                          p_started out date, p_deadline out date, p_last_modified out date,
+                                          p_error out number)
+    is
+begin
+    select description, progress, started, deadline, last_modified
+    into p_description, p_progress, p_started, p_deadline, p_last_modified
+    from repositories
+    where p_project_id = project_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/
 

@@ -214,6 +214,19 @@ exception
 end;
 /
 
+create or replace procedure addContributor(p_project_id in number, p_user_id in number, p_error out number)
+    is
+begin
+    insert into contributors (project_id, user_id)
+    values (p_project_id, p_user_id);
+    
+    p_error := 0;
+exception 
+    when others then
+        p_error := 1;
+end;
+/
+
 create or replace procedure editProfile(p_user_id in number, p_first_name in string, p_last_name in string,
                                         p_email in string, p_error out number)
     is

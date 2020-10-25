@@ -219,9 +219,9 @@ create or replace procedure addContributor(p_project_id in number, p_user_id in 
 begin
     insert into contributors (project_id, user_id)
     values (p_project_id, p_user_id);
-    
+
     p_error := 0;
-exception 
+exception
     when others then
         p_error := 1;
 end;
@@ -261,30 +261,19 @@ end;
 /
 
 create or replace procedure editRepository(p_project_id in number, p_description in string, p_progress in string,
-                                           p_deadline in date, p_error out number)
+                                           p_deadline in string, p_started out string, p_last_modified out string,
+                                           p_error out number)
     is
 begin
     update repositories
     set description=p_description,
         progress=p_progress,
-        deadline=p_deadline,
+        deadline=TO_DATE(p_deadline, 'DD-MM-YYYY HH:MI A.M.'),
         last_modified=sysdate
     where p_project_id = project_id;
 
-    p_error := 0;
-exception
-    when others then
-        p_error := 1;
-end;
-/
-
-create or replace procedure getRepository(p_project_id in number, p_description out string, p_progress out string,
-                                          p_started out date, p_deadline out date, p_last_modified out date,
-                                          p_error out number)
-    is
-begin
-    select description, progress, started, deadline, last_modified
-    into p_description, p_progress, p_started, p_deadline, p_last_modified
+    select TO_CHAR(started, 'DD-MM-YYYY HH:MI A.M.'), TO_CHAR(last_modified, 'DD-MM-YYYY HH:MI A.M.')
+    into p_started, p_last_modified
     from repositories
     where p_project_id = project_id;
 
@@ -295,3 +284,19 @@ exception
 end;
 /
 
+create or replace procedure getRepository(p_project_id in number, p_description out string, p_progress out string,
+                                          p_started out string, p_deadline out string, p_last_modified out string,
+                                          p_error out number)
+    is
+begin
+    select description, progress, TO_CHAR(started, 'DD-MM-YYYY HH:MI A.M.'), TO_CHAR(deadline, 'DD-MM-YYYY HH:MI A.M.'), TO_CHAR(last_modified, 'DD-MM-YYYY HH:MI A.M.')
+    into p_description, p_progress, p_started, p_deadline, p_last_modified
+    from repositories
+    where p_project_id = project_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/

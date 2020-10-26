@@ -1,10 +1,10 @@
 ﻿export interface ITokenUser {
-  user_id: number;
   username: string;
 }
 
 export interface IRepositoryKey {
-  user_id: number;
+  username: string;
+  owner_username: string;
   project_name: string;
 }
 
@@ -14,8 +14,10 @@ export interface IRepositoryInput {
 }
 
 export interface IRepository {
+  owner_username: string;
+  project_name: string;
   description: string;
-  started: string;
   deadline: string;
+  started: string;
   last_modified: string;
 }

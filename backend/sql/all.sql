@@ -63,7 +63,6 @@ create table repositories
 (
     project_id    number(10),
     description   varchar2(1024),
-    progress      varchar2(1024),
     started       date,
     deadline      date,
     last_modified date
@@ -185,7 +184,6 @@ begin
     p_error := 0;
 exception
     when others then
-        p_username := null;
         p_error := 1;
 end;
 /
@@ -198,7 +196,7 @@ begin
         from projects p
                  natural join contributors c
                  natural join users u
-        where p_user_id = c.user_id;
+        where p_user_id = user_id;
     p_error := 0;
 exception
     when others then
@@ -240,8 +238,8 @@ end;
 /
 
 create or replace procedure editRepository(p_user_id in number, p_project_name in string, p_description in string,
-                                           p_progress in string, p_deadline in string, p_started out string,
-                                           p_last_modified out string, p_error out number)
+                                           p_deadline in string, p_started out string, p_last_modified out string,
+                                           p_error out number)
     is
     m_project_id projects.project_id%TYPE;
 begin
@@ -253,7 +251,6 @@ begin
 
     update repositories
     set description=p_description,
-        progress=p_progress,
         deadline=TO_DATE(p_deadline, 'DD-MM-YYYY HH:MI A.M.'),
         last_modified=sysdate
     where m_project_id = project_id;
@@ -271,16 +268,15 @@ end;
 /
 
 create or replace procedure getRepository(p_user_id in number, p_project_name in string, p_description out string,
-                                          p_progress out string, p_started out string, p_deadline out string,
-                                          p_last_modified out string, p_error out number)
+                                          p_started out string, p_deadline out string, p_last_modified out string,
+                                          p_error out number)
     is
 begin
     select description,
-           progress,
            TO_CHAR(started, 'DD-MM-YYYY HH:MI A.M.'),
            TO_CHAR(deadline, 'DD-MM-YYYY HH:MI A.M.'),
            TO_CHAR(last_modified, 'DD-MM-YYYY HH:MI A.M.')
-    into p_description, p_progress, p_started, p_deadline, p_last_modified
+    into p_description, p_started, p_deadline, p_last_modified
     from repositories
     where project_id =
           (select p.project_id from projects p where p_user_id = p.owner_id and p_project_name = p.project_name);

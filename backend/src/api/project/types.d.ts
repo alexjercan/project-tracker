@@ -1,14 +1,15 @@
 export interface ITokenUser {
-  user_id: number;
   username: string;
 }
 
 export interface IProjectKey {
-  user_id: number;
-  project_name: string;  
+  project_name: string;
+  owner_username: string;
 }
 
+export interface IProjectInput {}
+
 export interface IProject {
-  username: string;
   project_name: string;
+  owner_username: string;
 }

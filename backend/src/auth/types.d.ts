@@ -1,15 +1,16 @@
-﻿export interface IUserInput {
+﻿export interface ITokenUser {
   username: string;
+}
+
+export interface IUserKey {
+  username: string;
+}
+
+export interface IUserInput {
   password: string;
 }
 
-export interface ITokenUser {
-  user_id: number;
-  username: string;
-}
-
 export interface IUser {
-  user_id: number;
   username: string;
   password: string;
 }

@@ -8,8 +8,8 @@ export default class Controller {
 
   ShowName(req: Request, res: Response, next: NextFunction) {
     const verified = req.body.verified as IVerified;
-    const user = verified.user as ITokenUser;
+    const { username } = verified.user as ITokenUser;
 
-    return res.status(200).send({ username: user.username });
+    return res.status(200).send({ username });
   }
 }

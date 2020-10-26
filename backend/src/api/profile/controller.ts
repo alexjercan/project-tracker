@@ -8,11 +8,11 @@ export default class Controller {
 
   async EditProfile(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
-    const { user_id }: ITokenUser = user as ITokenUser;
+    const { username }: ITokenUser = user as ITokenUser;
     const { first_name, last_name, email }: IProfileInput = req.body as IProfileInput;
 
     try {
-      const profileData = await this._service.EditProfile({ user_id }, { first_name, last_name, email });
+      const profileData = await this._service.EditProfile({ username }, { first_name, last_name, email });
       if (profileData === undefined) return res.status(401).send({ message: 'Invalid Profile' });
 
       req.body.profile = profileData;
@@ -24,10 +24,10 @@ export default class Controller {
 
   async GetProfile(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
-    const { user_id }: ITokenUser = user as ITokenUser;
+    const { username }: ITokenUser = user as ITokenUser;
 
     try {
-      const profileData = await this._service.GetProfile({ user_id });
+      const profileData = await this._service.GetProfile({ username });
       if (profileData === undefined) return res.status(401).send({ message: 'Invalid Profile' });
 
       req.body.profile = profileData;

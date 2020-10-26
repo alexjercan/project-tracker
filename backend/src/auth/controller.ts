@@ -1,12 +1,16 @@
 ﻿import { NextFunction, Request, Response } from 'express';
 import Service from './service';
+import { IUserInput, IUserKey } from './types';
 
 export default class Controller {
   constructor(private _service: Service) {}
 
   async SignUp(req: Request, res: Response, next: NextFunction) {
+    const { username }: IUserKey = req.body as IUserKey;
+    const { password }: IUserInput = req.body as IUserInput;
+
     try {
-      const userData = await this._service.SignUp(req.body);
+      const userData = await this._service.SignUp({ username }, { password });
       if (userData === undefined) return res.status(401).send({ message: 'Invalid SignUp' });
 
       req.body.user = userData;
@@ -17,8 +21,11 @@ export default class Controller {
   }
 
   async SignIn(req: Request, res: Response, next: NextFunction) {
+    const { username }: IUserKey = req.body as IUserKey;
+    const { password }: IUserInput = req.body as IUserInput;
+
     try {
-      const userRecord = await this._service.SignIn(req.body);
+      const userRecord = await this._service.SignIn({ username }, { password });
       if (userRecord === undefined) return res.status(401).send({ message: 'Invalid SignUp' });
 
       req.body.user = userRecord;

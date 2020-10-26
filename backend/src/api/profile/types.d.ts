@@ -1,10 +1,9 @@
 export interface ITokenUser {
-  user_id: number;
   username: string;
 }
 
 export interface IProfileKey {
-  user_id: number;
+  username: string;
 }
 
 export interface IProfileInput {
@@ -14,6 +13,7 @@ export interface IProfileInput {
 }
 
 export interface IProfile {
+  username: string;
   first_name: string;
   last_name: string;
   email: string;

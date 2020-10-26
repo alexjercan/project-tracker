@@ -114,11 +114,11 @@ create or replace procedure insertProject(p_project_name in string, p_owner_user
     is
 begin
     begin
-        insert into projects(project_name, owner_username)
-        values (p_project_name, p_owner_username);
+        insert into projects(project_name, owner_username, started, last_modified)
+        values (p_project_name, p_owner_username, sysdate, sysdate);
 
         insert into contributors(username, owner_username, project_name)
-        values (owner_username, owner_username, project_name);
+        values (p_owner_username, p_owner_username, p_project_name);
 
         p_error := 0;
     exception
@@ -129,13 +129,24 @@ end;
 /
 
 create or replace procedure editRepository(p_username in string, p_owner_username in string, p_project_name in string,
-                                           p_description in string, p_deadline in string, p_error out number)
+                                           p_description in string, p_deadline in string, p_started out string,
+                                           p_last_modified out string, p_error out number)
     is
 begin
     update projects
     set description=p_description,
         deadline=TO_DATE(p_deadline, 'DD-MM-YYYY HH:MI A.M.'),
         last_modified=sysdate
+    where p_owner_username = owner_username
+      and p_project_name = project_name
+      and p_username in (select username
+                         from contributors c
+                         where p_owner_username = c.owner_username
+                           and p_project_name = c.project_name);
+
+    select TO_CHAR(started, 'DD-MM-YYYY HH:MI A.M.'), TO_CHAR(last_modified, 'DD-MM-YYYY HH:MI A.M.')
+    into p_started, p_last_modified
+    from projects
     where p_owner_username = owner_username
       and p_project_name = project_name
       and p_username in (select username

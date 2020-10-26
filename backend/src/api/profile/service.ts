@@ -14,7 +14,7 @@ export default class Service {
 
   async GetProfile(profileKey: IProfileKey): Promise<IProfile | undefined> {
     try {
-      return await this._model.Get(profileKey);
+      return await this._model.FindOne(profileKey);
     } catch (error) {
       throw error;
     }

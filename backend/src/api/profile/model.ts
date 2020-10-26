@@ -24,7 +24,7 @@ export default class Model {
     return { ...profileKey, ...profileInput };
   }
 
-  async Get(profileKey: IProfileKey): Promise<IProfile | undefined> {
+  async FindOne(profileKey: IProfileKey): Promise<IProfile | undefined> {
     const result = await oracledbWrapper.simpleExecute<{
       first_name: string;
       last_name: string;

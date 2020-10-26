@@ -4,18 +4,41 @@ import Model from './model';
 
 describe('Profile Tests', () => {
   describe('Profile Service Tests', () => {
+    const returnsRecordEdit = async (
+      profileKey: IProfileKey,
+      profileInput: IProfileInput,
+    ): Promise<IProfile | undefined> => {
+      return {
+        ...profileKey,
+        ...profileInput,
+      };
+    };
+
+    const returnsUndefinedEdit = async (
+      profileKey: IProfileKey,
+      profileInput: IProfileInput,
+    ): Promise<IProfile | undefined> => {
+      return undefined;
+    };
+
+    const returnsRecordFindOne = async (profileKey: IProfileKey): Promise<IProfile | undefined> => {
+      return {
+        ...profileKey,
+        email: 'test@test.com',
+        first_name: 'first',
+        last_name: 'last',
+      };
+    };
+
+    const returnsUndefinedFindOne = async (profileKey: IProfileKey): Promise<IProfile | undefined> => {
+      return undefined;
+    };
+
     describe('EditProfile', () => {
       it('Should return a record when the model edits a record', async () => {
         const model: Model = {
-          async Edit(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
-            return {
-              ...profileKey,
-              ...profileInput,
-            };
-          },
-          async Get(profileKey: IProfileKey): Promise<IProfile | undefined> {
-            return undefined;
-          },
+          Edit: returnsRecordEdit,
+          FindOne: returnsUndefinedFindOne,
         };
 
         const profileKey: IProfileKey = {
@@ -38,12 +61,8 @@ describe('Profile Tests', () => {
       });
       it('Should return undefined when the model does not edit the record', async () => {
         const model: Model = {
-          async Edit(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
-            return undefined;
-          },
-          async Get(profileKey: IProfileKey): Promise<IProfile | undefined> {
-            return undefined;
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsUndefinedFindOne,
         };
 
         const profileKey: IProfileKey = {
@@ -65,17 +84,8 @@ describe('Profile Tests', () => {
     describe('GetProfile', () => {
       it('Should return a record when the model finds a record', async () => {
         const model: Model = {
-          async Edit(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
-            return undefined;
-          },
-          async Get(profileKey: IProfileKey): Promise<IProfile | undefined> {
-            return {
-              ...profileKey,
-              email: 'test@test.com',
-              first_name: 'first',
-              last_name: 'last',
-            };
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsRecordFindOne,
         };
 
         const profileKey: IProfileKey = {
@@ -89,12 +99,8 @@ describe('Profile Tests', () => {
       });
       it('Should return undefined when the model does not find a record', async () => {
         const model: Model = {
-          async Edit(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
-            return undefined;
-          },
-          async Get(profileKey: IProfileKey): Promise<IProfile | undefined> {
-            return undefined;
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsUndefinedFindOne,
         };
 
         const profileKey: IProfileKey = {

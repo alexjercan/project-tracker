@@ -4,21 +4,50 @@ import Model from './model';
 
 describe('Project Tests', () => {
   describe('Project Service Tests', () => {
+    const returnsRecordCreate = async (
+      projectKey: IProjectKey,
+      projectInput: IProjectInput,
+    ): Promise<IProject | undefined> => {
+      return {
+        ...projectKey,
+        ...projectInput,
+      };
+    };
+
+    const returnsUndefinedCreate = async (
+      projectKey: IProjectKey,
+      projectInput: IProjectInput,
+    ): Promise<IProject | undefined> => {
+      return undefined;
+    };
+
+    const returnsUndefinedFindOne = async (projectKey: IProjectKey): Promise<IProject | undefined> => {
+      return undefined;
+    };
+
+    const returnsRecordsFindAll = async (username: string): Promise<IProject[] | undefined> => {
+      return [
+        {
+          owner_username: 'username',
+          project_name: 'projectName1',
+        },
+        {
+          owner_username: 'username',
+          project_name: 'projectName2',
+        },
+      ];
+    };
+
+    const returnsUndefinedFindAll = async (username: string): Promise<IProject[] | undefined> => {
+      return undefined;
+    };
+
     describe('CreateProject', () => {
       it('Should return the record when the model creates a record', async () => {
         const model: Model = {
-          async Create(project: IProjectKey): Promise<IProject | undefined> {
-            return {
-              owner_username: 'username',
-              project_name: project.project_name,
-            };
-          },
-          async FindOne(projectInput: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindAll(username: string): Promise<IProject[] | undefined> {
-            return undefined;
-          },
+          Create: returnsRecordCreate,
+          FindOne: returnsUndefinedFindOne,
+          FindAll: returnsUndefinedFindAll,
         };
 
         const userKey: IProjectKey = {
@@ -43,15 +72,9 @@ describe('Project Tests', () => {
         const userInput: IProjectInput = {};
 
         const model: Model = {
-          async Create(project: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindOne(projectInput: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindAll(username: string): Promise<IProject[] | undefined> {
-            return undefined;
-          },
+          Create: returnsUndefinedCreate,
+          FindOne: returnsUndefinedFindOne,
+          FindAll: returnsUndefinedFindAll,
         };
 
         const service = new Service(model);
@@ -65,24 +88,9 @@ describe('Project Tests', () => {
         const username = 'username';
 
         const model: Model = {
-          async Create(project: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindOne(projectInput: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindAll(username: string): Promise<IProject[] | undefined> {
-            return [
-              {
-                owner_username: 'username',
-                project_name: 'projectName1',
-              },
-              {
-                owner_username: 'username',
-                project_name: 'projectName2',
-              },
-            ];
-          },
+          Create: returnsUndefinedCreate,
+          FindOne: returnsUndefinedFindOne,
+          FindAll: returnsRecordsFindAll,
         };
 
         const service = new Service(model);
@@ -95,15 +103,9 @@ describe('Project Tests', () => {
         const username = 'username';
 
         const model: Model = {
-          async Create(project: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindOne(projectInput: IProjectKey): Promise<IProject | undefined> {
-            return undefined;
-          },
-          async FindAll(username: string): Promise<IProject[] | undefined> {
-            return undefined;
-          },
+          Create: returnsUndefinedCreate,
+          FindOne: returnsUndefinedFindOne,
+          FindAll: returnsUndefinedFindAll,
         };
 
         const service = new Service(model);

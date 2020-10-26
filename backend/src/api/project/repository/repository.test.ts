@@ -4,25 +4,44 @@ import Service from './service';
 
 describe('Repository Tests', () => {
   describe('Repository Service Tests', () => {
+    const returnsRecordEdit = async (
+      repositoryKey: IRepositoryKey,
+      repositoryInput: IRepositoryInput,
+    ): Promise<IRepository | undefined> => {
+      return {
+        last_modified: '',
+        started: '',
+        ...repositoryKey,
+        ...repositoryInput,
+      };
+    };
+
+    const returnsUndefinedEdit = async (
+      repositoryKey: IRepositoryKey,
+      repositoryInput: IRepositoryInput,
+    ): Promise<IRepository | undefined> => {
+      return undefined;
+    };
+
+    const returnsRecordFindOne = async (repositoryKey: IRepositoryKey): Promise<IRepository | undefined> => {
+      return {
+        deadline: '',
+        description: '',
+        last_modified: '',
+        started: '',
+        ...repositoryKey,
+      };
+    };
+
+    const returnsUndefinedFindOne = async (repositoryKey: IRepositoryKey): Promise<IRepository | undefined> => {
+      return undefined;
+    };
+
     describe('GetRepository', () => {
       it('Should return the record when the model finds one', async () => {
         const model: Model = {
-          async Edit(
-            repositoryKey: IRepositoryKey,
-            repositoryInput: IRepositoryInput,
-          ): Promise<IRepository | undefined> {
-            return undefined;
-          },
-          async FindOne(repositoryInput: IRepositoryKey): Promise<IRepository | undefined> {
-            return {
-              owner_username: '',
-              project_name: '',
-              deadline: '',
-              description: '',
-              last_modified: '',
-              started: '',
-            };
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsRecordFindOne
         };
 
         const repositoryKey: IRepositoryKey = {
@@ -38,15 +57,8 @@ describe('Repository Tests', () => {
       });
       it('Should return undefined when the model does not find a record', async () => {
         const model: Model = {
-          async Edit(
-            repositoryKey: IRepositoryKey,
-            repositoryInput: IRepositoryInput,
-          ): Promise<IRepository | undefined> {
-            return undefined;
-          },
-          async FindOne(projectInput: IRepositoryKey): Promise<IRepository | undefined> {
-            return undefined;
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsUndefinedFindOne
         };
 
         const repositoryKey: IRepositoryKey = {
@@ -75,22 +87,8 @@ describe('Repository Tests', () => {
         };
 
         const model: Model = {
-          async Edit(
-            repositoryKey: IRepositoryKey,
-            repositoryInput: IRepositoryInput,
-          ): Promise<IRepository | undefined> {
-            return {
-              owner_username: '',
-              project_name: '',
-              deadline: repositoryInput.deadline,
-              description: repositoryInput.description,
-              last_modified: '',
-              started: '',
-            };
-          },
-          async FindOne(projectInput: IRepositoryKey): Promise<IRepository | undefined> {
-            return undefined;
-          },
+          Edit: returnsRecordEdit,
+          FindOne: returnsUndefinedFindOne
         };
 
         const service = new Service(model);
@@ -113,15 +111,8 @@ describe('Repository Tests', () => {
         };
 
         const model: Model = {
-          async Edit(
-            repositoryKey: IRepositoryKey,
-            repositoryInput: IRepositoryInput,
-          ): Promise<IRepository | undefined> {
-            return undefined;
-          },
-          async FindOne(projectInput: IRepositoryKey): Promise<IRepository | undefined> {
-            return undefined;
-          },
+          Edit: returnsUndefinedEdit,
+          FindOne: returnsUndefinedFindOne
         };
 
         const service = new Service(model);

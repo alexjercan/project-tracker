@@ -23,7 +23,7 @@ export default class Model {
   }
 
   async FindOne(projectKey: IProjectKey): Promise<IProject | undefined> {
-    const result = await oracledbWrapper.simpleExecute<{ username: string; error: number }>(
+    const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN doesProjectExists(p_project_name => :project_name, p_owner_username => :owner_username, p_error => :error); END;`,
       {
         project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.project_name },
@@ -37,9 +37,7 @@ export default class Model {
 
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
-
-    const username = result.outBinds.username;
-    if (username === undefined) return undefined;
+    
     return { ...projectKey };
   }
 

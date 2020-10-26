@@ -222,3 +222,60 @@ exception
         p_error := 1;
 end;
 /
+
+create or replace procedure insertContributor(p_project_name in string, p_owner_username in string,
+                                              p_contributor_username in string, p_error out number)
+    is
+begin
+    begin
+        insert into contributors(username, owner_username, project_name)
+        values (p_contributor_username, p_owner_username, p_project_name);
+
+        p_error := 0;
+    exception
+        when others then
+            p_error := 1;
+    end;
+end;
+/
+
+create or replace procedure doesContributorExists(p_project_name in string, p_owner_username in string,
+                                                  p_contributor_username in string, p_error out number)
+    is
+    result_count number := 0;
+begin
+    select count(*)
+    into result_count
+    from contributors
+    where p_project_name = project_name
+      and p_owner_username = owner_username
+      and p_contributor_username = username
+    group by project_name, owner_username, username;
+
+    if result_count = 0 then
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
+create or replace procedure getContributors(p_owner_username in string, p_project_name in string,
+                                            p_cursor out sys_refcursor, p_error out number)
+    is
+begin
+    open p_cursor for
+        select project_name, username
+        from contributors p
+        where p_owner_username = owner_username
+          and p_project_name = project_name;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/

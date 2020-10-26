@@ -142,7 +142,8 @@ begin
 end;
 /
 
-create or replace procedure insertProject(p_project_name in string, p_owner_id in number, p_error out number)
+create or replace procedure insertProject(p_project_name in string, p_owner_id in number, p_username out string,
+                                          p_error out number)
     is
     m_project_id projects.project_id%TYPE;
 begin
@@ -158,6 +159,11 @@ begin
         insert into repositories(project_id, started, last_modified)
         values (m_project_id, sysdate, sysdate);
 
+        select username
+        into p_username
+        from users
+        where p_owner_id = user_id;
+
         p_error := 0;
     exception
         when others then
@@ -166,22 +172,21 @@ begin
 end;
 /
 
-create or replace procedure getProject(p_project_name in string, p_user_id in number, p_project_id out number,
-                                       p_error out number)
+create or replace procedure getProjectOwner(p_project_name in string, p_user_id in number, p_username out string,
+                                            p_error out number)
     is
 begin
-    begin
-        select project_id
-        into p_project_id
-        from projects
-        where project_name = p_project_name
-          and owner_id = p_user_id;
-        p_error := 0;
-    exception
-        when others then
-            p_project_id := null;
-            p_error := 1;
-    end;
+    select u.username
+    into p_username
+    from projects p
+             join users u on p.owner_id = u.user_id
+    where project_name = p_project_name
+      and owner_id = p_user_id;
+    p_error := 0;
+exception
+    when others then
+        p_username := null;
+        p_error := 1;
 end;
 /
 
@@ -189,23 +194,10 @@ create or replace procedure getProjects(p_user_id in number, p_cursor out sys_re
     is
 begin
     open p_cursor for
-        select p.project_name
-        from projects p
-        where p_user_id = p.owner_id;
-    p_error := 0;
-exception
-    when others then
-        p_error := 1;
-end;
-/
-
-create or replace procedure getContributedProjects(p_user_id in number, p_cursor out sys_refcursor, p_error out number)
-    is
-begin
-    open p_cursor for
-        select p.project_name
+        select p.project_name, u.username
         from projects p
                  natural join contributors c
+                 natural join users u
         where p_user_id = c.user_id;
     p_error := 0;
 exception

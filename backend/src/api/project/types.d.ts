@@ -9,5 +9,6 @@ export interface IProjectKey {
 }
 
 export interface IProject {
+  username: string;
   project_name: string;
 }

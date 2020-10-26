@@ -3,7 +3,6 @@ import Model from './model';
 import Service from './service';
 import Controller from './controller';
 import { repositorySuccess } from './middleware';
-import contributor from "./contributor";
 
 const repository = () => {
   const model = new Model();
@@ -11,8 +10,6 @@ const repository = () => {
   const controller = new Controller(service);
 
   const router = Router();
-
-  router.use('/contributor', contributor());
 
   router.get('/', controller.GetRepository.bind(controller), repositorySuccess);
   router.post('/', controller.EditRepository.bind(controller), repositorySuccess);

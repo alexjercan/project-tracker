@@ -1,15 +1,15 @@
 import Model from './model';
-import { IProject, IProjectInput } from './types';
+import { IProject, IProjectKey } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
-  async CreateProject(projectInput: IProjectInput): Promise<IProject | undefined> {
+  async CreateProject(projectKey: IProjectKey): Promise<IProject | undefined> {
     try {
-      const record = await this._model.FindOne(projectInput);
+      const record = await this._model.FindOne(projectKey);
       if (record !== undefined) return undefined;
 
-      return await this._model.Create(projectInput);
+      return await this._model.Create(projectKey);
     } catch (error) {
       throw error;
     }

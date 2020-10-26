@@ -1,14 +1,14 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
-import { IProject, IProjectInput } from './types';
+import {IProject, IProjectKey} from './types';
 import oracledb from 'oracledb';
 
 export default class Model {
-  async Create(project: IProjectInput): Promise<IProject | undefined> {
+  async Create(projectKey: IProjectKey): Promise<IProject | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN insertProject(p_project_name => :p1, p_owner_id => :p2, p_error => :error); END;`,
       {
-        p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: project.project_name },
-        p2: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: project.user_id },
+        p1: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.project_name },
+        p2: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: projectKey.user_id },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -19,10 +19,10 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { project_name: project.project_name };
+    return { project_name: projectKey.project_name };
   }
 
-  async FindOne(projectInput: IProjectInput): Promise<IProject | undefined> {
+  async FindOne(projectInput: IProjectKey): Promise<IProject | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ project_id: number; error: number }>(
       `BEGIN getProject(p_project_name => :p1, p_user_id => :p2, p_project_id => :project_id, p_error => :error); END;`,
       {

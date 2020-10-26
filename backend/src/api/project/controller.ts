@@ -1,11 +1,7 @@
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { NextFunction, Request, Response } from 'express';
 import Service from './service';
-import { IProjectInput, ITokenUser } from './types';
-
-interface IUserInput {
-  project_name: string;
-}
+import { IProject, ITokenUser } from './types';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -13,12 +9,10 @@ export default class Controller {
   async CreateProject(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { user_id }: ITokenUser = user as ITokenUser;
-    const { project_name }: IUserInput = req.body;
-
-    const projectInput: IProjectInput = { user_id, project_name };
+    const { project_name }: IProject = req.body as IProject;
 
     try {
-      const projectData = await this._service.CreateProject(projectInput);
+      const projectData = await this._service.CreateProject({ user_id, project_name });
       if (projectData === undefined) return res.status(401).send({ message: 'Invalid Project' });
 
       req.body.projects = [projectData];

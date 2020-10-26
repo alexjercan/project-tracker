@@ -3,9 +3,9 @@ export interface ITokenUser {
   username: string;
 }
 
-export interface IProjectInput {
+export interface IProjectKey {
   user_id: number;
-  project_name: string;
+  project_name: string;  
 }
 
 export interface IProject {

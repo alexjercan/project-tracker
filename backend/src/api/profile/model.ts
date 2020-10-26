@@ -1,9 +1,9 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import oracledb from 'oracledb';
-import {IProfile, IProfileKey} from './types';
+import {IProfile, IProfileInput, IProfileKey} from './types';
 
 export default class Model {
-  async Edit(profileKey: IProfileKey, profile: IProfile): Promise<IProfile | undefined> {
+  async Edit(profileKey: IProfileKey, profile: IProfileInput): Promise<IProfile | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN editProfile(p_user_id => :p1, p_first_name => :p2, p_last_name => :p3, p_email => :p4, p_error => :error); END;`,
       {

@@ -1,10 +1,10 @@
 import Model from './model';
-import {IProfile, IProfileKey} from './types';
+import {IProfile, IProfileInput, IProfileKey} from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
-  async EditProfile(profileKey: IProfileKey, profileInput: IProfile): Promise<IProfile | undefined> {
+  async EditProfile(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
     try {
       return await this._model.Edit(profileKey, profileInput);
     } catch (error) {

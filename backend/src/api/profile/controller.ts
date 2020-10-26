@@ -1,7 +1,7 @@
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { NextFunction, Request, Response } from 'express';
 import Service from './service';
-import { IProfile, ITokenUser } from './types';
+import { IProfileInput, ITokenUser} from './types';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -9,7 +9,7 @@ export default class Controller {
   async EditProfile(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { user_id }: ITokenUser = user as ITokenUser;
-    const { first_name, last_name, email }: IProfile = req.body as IProfile;
+    const { first_name, last_name, email }: IProfileInput = req.body as IProfileInput;
 
     try {
       const profileData = await this._service.EditProfile({ user_id }, { first_name, last_name, email });

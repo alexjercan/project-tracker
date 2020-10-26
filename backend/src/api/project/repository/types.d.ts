@@ -3,20 +3,17 @@
   username: string;
 }
 
-export interface IProjectInput {
+export interface IRepositoryKey {
   user_id: number;
   project_name: string;
 }
 
 export interface IRepositoryInput {
-  user_id: number;
-  project_name: string;
   description: string;
   deadline: string;
 }
 
 export interface IRepository {
-  project_name: string;
   description: string;
   started: string;
   deadline: string;

@@ -1,20 +1,20 @@
 ﻿import Model from './model';
-import {IProjectInput, IRepository, IRepositoryInput} from './types';
+import {IRepositoryKey, IRepository, IRepositoryInput} from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
-  async GetRepository(projectInput: IProjectInput): Promise<IRepository | undefined> {
+  async GetRepository(repositoryKey: IRepositoryKey): Promise<IRepository | undefined> {
     try {
-      return await this._model.FindOne(projectInput);
+      return await this._model.FindOne(repositoryKey);
     } catch (error) {
       throw error;
     }
   }
 
-  async EditRepository(repositoryInput: IRepositoryInput): Promise<IRepository | undefined> {
+  async EditRepository(repositoryKey: IRepositoryKey, repositoryInput: IRepositoryInput): Promise<IRepository | undefined> {
     try {
-      return await this._model.Edit(repositoryInput);
+      return await this._model.Edit(repositoryKey, repositoryInput);
     } catch (error) {
       throw error;
     }

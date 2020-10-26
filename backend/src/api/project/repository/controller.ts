@@ -33,9 +33,9 @@ export default class Controller {
   async EditRepository(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { user_id }: ITokenUser = user as ITokenUser;
-    const { project_name, description, progress, deadline }: IRepositoryInput = req.body;
+    const { project_name, description, deadline }: IRepositoryInput = req.body;
 
-    const repositoryInput: IRepositoryInput = { user_id, project_name, description, progress, deadline };
+    const repositoryInput: IRepositoryInput = { user_id, project_name, description, deadline };
 
     try {
       const repositoryData = await this._service.EditRepository(repositoryInput);

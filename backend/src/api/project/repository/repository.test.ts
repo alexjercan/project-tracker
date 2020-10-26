@@ -15,7 +15,6 @@ describe('Repository Tests', () => {
               deadline: '',
               description: '',
               last_modified: '',
-              progress: '',
               started: '',
             };
           },
@@ -57,7 +56,6 @@ describe('Repository Tests', () => {
         const repositoryInput: IRepositoryInput = {
           deadline: '20-03-2020',
           description: 'description',
-          progress: 'progress',
           project_name: '',
           user_id: 1,
         };
@@ -68,7 +66,6 @@ describe('Repository Tests', () => {
               deadline: repositoryInput.deadline,
               description: repositoryInput.description,
               last_modified: '',
-              progress: repositoryInput.progress,
               started: '',
             }; 
           },
@@ -82,14 +79,12 @@ describe('Repository Tests', () => {
         
         expect(result).toBeDefined();
         expect(result?.description).toBe(repositoryInput.description);
-        expect(result?.progress).toBe(repositoryInput.progress);
         expect(result?.deadline).toBe(repositoryInput.deadline);
       });
       it('Should return undefined when the model does not edit it', async () => {
         const repositoryInput: IRepositoryInput = {
           deadline: '20-03-2020',
           description: 'description',
-          progress: 'progress',
           project_name: '',
           user_id: 1,
         };

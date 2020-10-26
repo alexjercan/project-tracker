@@ -12,13 +12,12 @@ export interface IRepositoryInput {
   user_id: number;
   project_name: string;
   description: string;
-  progress: string;
   deadline: string;
 }
 
 export interface IRepository {
+  project_name: string;
   description: string;
-  progress: string;
   started: string;
   deadline: string;
   last_modified: string;

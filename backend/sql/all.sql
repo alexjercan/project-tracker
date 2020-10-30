@@ -50,6 +50,24 @@ alter table contributors
         constraint contributors_project_id_fk foreign key (project_id) references projects (project_id)
         );
 
+create table comments
+(
+    comment_id  number(10),
+    user_id     number(10),
+    project_id  number(10),
+    description varchar2(1024),
+    timestamp   date
+);
+
+create unique index comments_comment_id_pk on comments (comment_id);
+
+alter table comments
+    add (
+        constraint comments_comment_id_pk primary key (comment_id),
+        constraint comments_user_id_fk foreign key (user_id) references users (user_id),
+        constraint comments_project_id_fk foreign key (project_id) references projects (project_id)
+        );
+
 ------ AUTOMATED PK -------
 
 create sequence users_sequence;
@@ -90,6 +108,48 @@ begin
     from dual;
 end;
 /
+
+create sequence comments_sequence;
+
+create or replace trigger comments_on_insert
+    before insert
+    on comments
+    for each row
+begin
+    select contributors_sequence.nextval
+    into :NEW.comment_id
+    from dual;
+end;
+
+------- UTIL FUNCTIONS -------
+
+create or replace function getUserId(p_username in string) return number
+    is
+    v_user_id users.user_id%type;
+begin
+    select user_id
+    into v_user_id
+    from users
+    where p_username = username;
+
+    return v_user_id;
+end;
+
+create or replace function getProjectId(p_owner_username in string, p_project_name in string) return number
+    is
+    v_owner_id   users.user_id%type;
+    v_project_id projects.project_id%type;
+begin
+    v_owner_id := getUserId(p_owner_username);
+
+    select project_id
+    into v_project_id
+    from projects
+    where p_project_name = project_name
+      and v_owner_id = owner_id;
+
+    return v_project_id;
+end;
 
 ------- PROCEDURES --------
 
@@ -156,10 +216,7 @@ create or replace procedure insertProject(p_project_name in string, p_owner_user
     v_owner_id   users.user_id%type;
     v_project_id projects.project_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
+    v_owner_id := getUserId(p_owner_username);
 
     insert into projects(project_name, owner_id, started, last_modified)
     values (p_project_name, v_owner_id, sysdate, sysdate);
@@ -170,7 +227,9 @@ begin
     values (v_owner_id, v_project_id);
 
     p_error := 0;
-
+exception
+    when others then
+        p_error := 1;
 end;
 /
 
@@ -182,21 +241,9 @@ create or replace procedure editRepository(p_username in string, p_owner_usernam
     v_owner_id   users.user_id%type;
     v_project_id projects.project_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
-
-    select user_id
-    into v_user_id
-    from users
-    where p_username = username;
-
-    select project_id
-    into v_project_id
-    from projects
-    where p_project_name = project_name
-      and v_owner_id = owner_id;
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
 
     update projects
     set description=p_description,
@@ -227,10 +274,7 @@ create or replace procedure doesProjectExists(p_project_name in string, p_owner_
     result_count number := 0;
     v_owner_id   users.user_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
+    v_owner_id := getUserId(p_owner_username);
 
     select count(*)
     into result_count
@@ -254,10 +298,7 @@ create or replace procedure getProjects(p_username in string, p_cursor out sys_r
     is
     v_user_id users.user_id%type;
 begin
-    select user_id
-    into v_user_id
-    from users
-    where p_username = username;
+    v_user_id := getUserId(p_username);
 
     open p_cursor for
         select p.project_name, o.username
@@ -281,21 +322,9 @@ create or replace procedure getRepository(p_username in string, p_owner_username
     v_owner_id   users.user_id%type;
     v_project_id projects.project_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
-
-    select user_id
-    into v_user_id
-    from users
-    where p_username = username;
-
-    select project_id
-    into v_project_id
-    from projects
-    where p_project_name = project_name
-      and v_owner_id = owner_id;
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
 
     select description,
            TO_CHAR(started, 'DD-MM-YYYY HH:MI A.M.'),
@@ -322,21 +351,9 @@ create or replace procedure insertContributor(p_project_name in string, p_owner_
     v_project_id projects.project_id%type;
     v_owner_id   users.user_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
-
-    select user_id
-    into v_user_id
-    from users
-    where p_contributor_username = username;
-
-    select project_id
-    into v_project_id
-    from projects
-    where p_project_name = project_name
-      and v_owner_id = owner_id;
+    v_user_id := getUserId(p_contributor_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
 
     insert into contributors(user_id, project_id)
     values (v_user_id, v_project_id);
@@ -356,21 +373,9 @@ create or replace procedure doesContributorExists(p_project_name in string, p_ow
     v_project_id projects.project_id%type;
     v_owner_id   users.user_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
-
-    select user_id
-    into v_user_id
-    from users
-    where p_contributor_username = username;
-
-    select project_id
-    into v_project_id
-    from projects
-    where p_project_name = project_name
-      and v_owner_id = owner_id;
+    v_user_id := getUserId(p_contributor_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
 
     select count(*)
     into result_count
@@ -396,16 +401,8 @@ create or replace procedure getContributors(p_owner_username in string, p_projec
     v_project_id projects.project_id%type;
     v_owner_id   users.user_id%type;
 begin
-    select user_id
-    into v_owner_id
-    from users
-    where p_owner_username = username;
-
-    select project_id
-    into v_project_id
-    from projects
-    where p_project_name = project_name
-      and v_owner_id = owner_id;
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
 
 
     open p_cursor for
@@ -421,3 +418,44 @@ exception
         p_error := 1;
 end;
 /
+
+create or replace procedure insertComment(p_owner_username in string, p_project_name in string, p_username in string,
+                                          p_description in string, p_error out number)
+    is
+    v_user_id    users.user_id%type;
+    v_owner_id   users.user_id%type;
+    v_project_id projects.project_id%type;
+begin
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+
+    insert into comments(user_id, project_id, description, timestamp)
+    values (v_user_id, v_project_id, p_description, sysdate);
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+
+create or replace procedure getComments(p_owner_username in string, p_project_name in string,
+                                        p_cursor out sys_refcursor, p_error out number)
+    is
+    v_project_id projects.project_id%type;
+    v_owner_id   users.user_id%type;
+begin
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+
+    open p_cursor for
+        select username, description, timestamp
+        from users
+                 natural join comments
+        where v_project_id = project_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;

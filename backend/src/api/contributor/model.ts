@@ -54,13 +54,13 @@ export default class Model {
     return { ...contributorKey };
   }
 
-  async FindAll(owner_username: string, project_name: string): Promise<IContributor[] | undefined> {
+  async FindAll(ownerUsername: string, projectName: string): Promise<IContributor[] | undefined> {
     const rowToObject = (record: any[]): IContributor | undefined => {
       if (record === undefined) return undefined;
       return {
         project_name: record[0],
         contributor_username: record[1],
-        owner_username,
+        owner_username: ownerUsername,
       };
     };
 
@@ -68,8 +68,8 @@ export default class Model {
     const result = await connection.execute<{ cursor: oracledb.ResultSet<any>; error: number }>(
       `BEGIN getContributors(p_owner_username => :owner_username, p_project_name => :project_name, p_cursor => :cursor, p_error => :error); END;`,
       {
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: owner_username },
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: project_name },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
         cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },

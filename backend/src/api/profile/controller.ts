@@ -1,7 +1,7 @@
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { NextFunction, Request, Response } from 'express';
 import Service from './service';
-import { IProfileInput, ITokenUser} from './types';
+import { IProfileInput, ITokenUser } from './types';
 
 export default class Controller {
   constructor(private _service: Service) {}

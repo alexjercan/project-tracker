@@ -5,7 +5,7 @@ import Service from './service';
 import project from './project';
 import profile from './profile';
 import repository from './repository';
-import contributor from "./contributor";
+import contributor from './contributor';
 
 const api = () => {
   const service = new Service();

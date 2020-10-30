@@ -41,7 +41,7 @@ describe('Repository Tests', () => {
       it('Should return the record when the model finds one', async () => {
         const model: Model = {
           Edit: returnsUndefinedEdit,
-          FindOne: returnsRecordFindOne
+          FindOne: returnsRecordFindOne,
         };
 
         const repositoryKey: IRepositoryKey = {
@@ -58,7 +58,7 @@ describe('Repository Tests', () => {
       it('Should return undefined when the model does not find a record', async () => {
         const model: Model = {
           Edit: returnsUndefinedEdit,
-          FindOne: returnsUndefinedFindOne
+          FindOne: returnsUndefinedFindOne,
         };
 
         const repositoryKey: IRepositoryKey = {
@@ -88,7 +88,7 @@ describe('Repository Tests', () => {
 
         const model: Model = {
           Edit: returnsRecordEdit,
-          FindOne: returnsUndefinedFindOne
+          FindOne: returnsUndefinedFindOne,
         };
 
         const service = new Service(model);
@@ -112,7 +112,7 @@ describe('Repository Tests', () => {
 
         const model: Model = {
           Edit: returnsUndefinedEdit,
-          FindOne: returnsUndefinedFindOne
+          FindOne: returnsUndefinedFindOne,
         };
 
         const service = new Service(model);

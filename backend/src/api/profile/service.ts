@@ -1,5 +1,5 @@
 import Model from './model';
-import {IProfile, IProfileInput, IProfileKey} from './types';
+import { IProfile, IProfileInput, IProfileKey } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}

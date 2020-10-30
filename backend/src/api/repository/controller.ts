@@ -39,7 +39,6 @@ export default class Controller {
       req.body.repository = repositoryData;
       next();
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ message: error });
     }
   }

@@ -1,5 +1,5 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
-import {IProject, IProjectInput, IProjectKey} from './types';
+import { IProject, IProjectInput, IProjectKey } from './types';
 import oracledb from 'oracledb';
 
 export default class Model {
@@ -37,7 +37,7 @@ export default class Model {
 
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
-    
+
     return { ...projectKey };
   }
 

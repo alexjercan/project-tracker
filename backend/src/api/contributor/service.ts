@@ -1,10 +1,13 @@
 ﻿import Model from './model';
-import {IContributor, IContributorInput, IContributorKey} from "./types";
+import { IContributor, IContributorInput, IContributorKey } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
-  async AddContributor(contributorKey: IContributorKey, contributorInput: IContributorInput): Promise<IContributor | undefined> {
+  async AddContributor(
+    contributorKey: IContributorKey,
+    contributorInput: IContributorInput,
+  ): Promise<IContributor | undefined> {
     try {
       const record = await this._model.FindOne(contributorKey);
       if (record !== undefined) return undefined;
@@ -15,9 +18,9 @@ export default class Service {
     }
   }
 
-  async GetContributors(owner_username: string, project_name: string): Promise<IContributor[] | undefined> {
+  async GetContributors(ownerUsername: string, projectName: string): Promise<IContributor[] | undefined> {
     try {
-      return await this._model.FindAll(owner_username, project_name);
+      return await this._model.FindAll(ownerUsername, projectName);
     } catch (error) {
       throw error;
     }

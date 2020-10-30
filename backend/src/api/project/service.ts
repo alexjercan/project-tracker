@@ -1,5 +1,5 @@
 import Model from './model';
-import {IProject, IProjectInput, IProjectKey} from './types';
+import { IProject, IProjectInput, IProjectKey } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}

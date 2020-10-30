@@ -1,5 +1,5 @@
 ﻿import Model from './model';
-import {IRepositoryKey, IRepository, IRepositoryInput} from './types';
+import { IRepositoryKey, IRepository, IRepositoryInput } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
@@ -12,7 +12,10 @@ export default class Service {
     }
   }
 
-  async EditRepository(repositoryKey: IRepositoryKey, repositoryInput: IRepositoryInput): Promise<IRepository | undefined> {
+  async EditRepository(
+    repositoryKey: IRepositoryKey,
+    repositoryInput: IRepositoryInput,
+  ): Promise<IRepository | undefined> {
     try {
       return await this._model.Edit(repositoryKey, repositoryInput);
     } catch (error) {

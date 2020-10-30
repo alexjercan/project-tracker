@@ -6,6 +6,7 @@ import project from './project';
 import profile from './profile';
 import repository from './repository';
 import contributor from './contributor';
+import comment from './comment';
 
 const api = () => {
   const service = new Service();
@@ -17,8 +18,10 @@ const api = () => {
 
   router.use('/profile', profile());
   router.use('/project', project());
+  router.use('/comment', comment());
   router.use('/repository', repository());
   router.use('/contributor', contributor());
+
   router.get('/', controller.ShowName.bind(controller));
 
   return router;

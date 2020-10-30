@@ -420,19 +420,26 @@ end;
 /
 
 create or replace procedure insertComment(p_owner_username in string, p_project_name in string, p_username in string,
-                                          p_description in string, p_error out number)
+                                          p_description in string, p_timestamp out string, p_error out number)
     is
     v_user_id    users.user_id%type;
     v_owner_id   users.user_id%type;
     v_project_id projects.project_id%type;
+    v_timestamp  comments.timestamp%type;
 begin
     v_user_id := getUserId(p_username);
     v_owner_id := getUserId(p_owner_username);
     v_project_id := getProjectId(p_owner_username, p_project_name);
 
+    select sysdate
+    into v_timestamp
+    from dual;
+    
     insert into comments(user_id, project_id, description, timestamp)
-    values (v_user_id, v_project_id, p_description, sysdate);
+    values (v_user_id, v_project_id, p_description, v_timestamp);
 
+    p_timestamp := TO_CHAR(v_timestamp, 'DD-MM-YYYY HH:MI A.M.');
+    
     p_error := 0;
 exception
     when others then

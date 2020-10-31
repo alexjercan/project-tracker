@@ -31,11 +31,10 @@ export default class Controller {
 
   async GetContributors(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
-    const { username }: ITokenUser = user as ITokenUser;
-    const { project_name }: IContributorKey = req.body as IContributorKey;
+    const { owner_username, project_name }: IContributorKey = req.body as IContributorKey;
 
     try {
-      const contributorsData = await this._service.GetContributors(username, project_name);
+      const contributorsData = await this._service.GetContributors(owner_username, project_name);
       if (contributorsData === undefined) return res.status(401).send({ message: 'Invalid Contributor' });
 
       req.body.contributors = contributorsData;

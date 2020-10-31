@@ -11,8 +11,8 @@ const comment = () => {
 
   const router = Router();
 
-  router.get('/', controller.AddComment.bind(controller), commentSuccess);
-  router.post('/', controller.GetComments.bind(controller), commentSuccess);
+  router.get('/', controller.GetComments.bind(controller), commentSuccess);
+  router.post('/', controller.AddComment.bind(controller), commentSuccess);
 
   return router;
 };

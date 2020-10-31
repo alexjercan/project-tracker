@@ -151,6 +151,37 @@ begin
     return v_project_id;
 end;
 
+
+create or replace function doesContributorExistFunc(p_project_name in string, p_owner_username in string,
+                                                    p_username in string) return number
+    is
+    result_count number := 0;
+    v_user_id    users.user_id%type;
+    v_project_id projects.project_id%type;
+    v_owner_id   users.user_id%type;
+begin
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+
+    select count(*)
+    into result_count
+    from contributors
+    where v_project_id = project_id
+      and v_user_id = user_id
+    group by project_id, user_id;
+
+    if result_count = 0 then
+        return 0;
+    else
+        return 1;
+    end if;
+exception
+    when others then
+        return 0;
+end;
+
+
 ------- PROCEDURES --------
 
 create or replace procedure insertUser(p_username in string, p_password in string, p_error out number)
@@ -310,6 +341,7 @@ begin
     p_error := 0;
 exception
     when others then
+        open p_cursor for select null from dual;
         p_error := 1;
 end;
 /
@@ -404,7 +436,6 @@ begin
     v_owner_id := getUserId(p_owner_username);
     v_project_id := getProjectId(p_owner_username, p_project_name);
 
-
     open p_cursor for
         select project_name, username
         from contributors
@@ -415,6 +446,7 @@ begin
     p_error := 0;
 exception
     when others then
+        open p_cursor for select null from dual;
         p_error := 1;
 end;
 /
@@ -426,43 +458,58 @@ create or replace procedure insertComment(p_owner_username in string, p_project_
     v_owner_id   users.user_id%type;
     v_project_id projects.project_id%type;
     v_timestamp  comments.timestamp%type;
+    v_exists     number;
 begin
     v_user_id := getUserId(p_username);
     v_owner_id := getUserId(p_owner_username);
     v_project_id := getProjectId(p_owner_username, p_project_name);
 
+    v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
+
     select sysdate
     into v_timestamp
     from dual;
-    
-    insert into comments(user_id, project_id, description, timestamp)
-    values (v_user_id, v_project_id, p_description, v_timestamp);
 
-    p_timestamp := TO_CHAR(v_timestamp, 'DD-MM-YYYY HH:MI A.M.');
-    
-    p_error := 0;
+    if v_exists = 1 then
+        insert into comments(user_id, project_id, description, timestamp)
+        values (v_user_id, v_project_id, p_description, v_timestamp);
+
+        p_timestamp := TO_CHAR(v_timestamp, 'DD-MM-YYYY HH:MI A.M.');
+
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
 exception
     when others then
         p_error := 1;
 end;
 
-create or replace procedure getComments(p_owner_username in string, p_project_name in string,
+create or replace procedure getComments(p_username in string, p_owner_username in string, p_project_name in string,
                                         p_cursor out sys_refcursor, p_error out number)
     is
     v_project_id projects.project_id%type;
     v_owner_id   users.user_id%type;
+    v_exists     number;
 begin
     v_owner_id := getUserId(p_owner_username);
     v_project_id := getProjectId(p_owner_username, p_project_name);
+    v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
 
     open p_cursor for
         select username, description, timestamp
         from users
                  natural join comments
-        where v_project_id = project_id;
+        where v_project_id = project_id
+          and v_exists = 1;
 
-    p_error := 0;
+    if v_exists = 1 then
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
 exception
     when others then
+        open p_cursor for select null from dual;
         p_error := 1;
 end;

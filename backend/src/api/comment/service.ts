@@ -14,7 +14,7 @@ export default class Service {
 
   async GetComments(owner_username: string, project_name: string, username: string): Promise<IComment[] | undefined> {
     try {
-      return await this._model.FindAll(owner_username, project_name);
+      return await this._model.FindAll(owner_username, project_name, username);
     } catch (error) {
       throw error;
     }

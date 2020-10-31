@@ -26,7 +26,7 @@ export default class Controller {
 
     try {
       const userRecord = await this._service.SignIn({ username }, { password });
-      if (userRecord === undefined) return res.status(401).send({ message: 'Invalid SignUp' });
+      if (userRecord === undefined) return res.status(401).send({ message: 'Invalid SignIn' });
 
       req.body.user = userRecord;
       next();

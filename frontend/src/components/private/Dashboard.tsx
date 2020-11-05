@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import TextInput from "../../utils/TextInput";
+import { Link } from "react-router-dom";
 
-interface IResponse {
-  username: string;
-}
-
-export interface IRequestResponse {
-  status: number;
-  headers: Headers;
+interface IProject {
+  project_name: string;
+  owner_username: string;
 }
 
 export interface IUserInput {
@@ -16,76 +12,34 @@ export interface IUserInput {
 
 interface Props {
   headers: Headers | undefined;
+  setHeaders: React.Dispatch<React.SetStateAction<Headers | undefined>>;
 }
 
-const helloMessage = async (
+const getProjects = async (
   headers: Headers | undefined
-): Promise<IResponse | undefined> => {
-  const response = await fetch("/api", {
+): Promise<IProject[] | undefined> => {
+  const response = await fetch("/api/project", {
     method: "GET",
     headers: headers,
   });
 
   if (response.status !== 200) return undefined;
-  return (await response.json()) as IResponse;
-};
-
-const createClickedHandler = async (
-  headers: Headers | undefined,
-  userInput: IUserInput
-) => {
-  const h = new Headers(headers);
-  h.set("Content-Type", "application/json");
-  h.append("Accept", "application/json")
-
-  const response = await fetch("/api/project/new", {
-    method: "POST",
-    headers: h,
-    body: JSON.stringify(userInput),
-  });
-
-  if (response.status !== 200) return undefined;
-  console.log(await response.json());
-};
-
-const getClickedHandler = async (
-  headers: Headers | undefined
-) => {
-  const response = await fetch("/api/project/getAll", {
-    method: "GET",
-    headers: headers,
-  });
-
-  if (response.status !== 200) return undefined;
-  console.log(await response.json());
+  const a = await response.json();
+  console.log(a);
+  return a as IProject[];
 };
 
 const Dashboard: React.FC<Props> = (props) => {
-  const [responseValue, setResponseValue] = useState<IResponse | undefined>();
-  const [projectNameValue, setProjectNameValue] = useState<string>("");
+  const [response, setResponse] = useState<IProject[] | undefined>();
 
   useEffect(() => {
-    helloMessage(props.headers).then((response) => setResponseValue(response));
-  }, [props.headers, setResponseValue]);
+    getProjects(props.headers).then((response) => setResponse(response));
+  }, [props.headers, setResponse]);
 
   return (
     <div>
-      <h2>Hello {responseValue?.username}</h2>
-
-      <hr />
-
-      <div>
-        <div>username</div>
-        <TextInput setTextValue={setProjectNameValue} />
-      </div>
-      <button
-        onClick={() => createClickedHandler(props.headers, { project_name: projectNameValue })}
-      >
-        SignIn
-      </button>
-      <button
-        onClick={() => getClickedHandler(props.headers)}
-      >AAAAAAAAAAA</button>
+      <h2>Dashboard</h2>
+      <Link to="/profile">Profile</Link>
     </div>
   );
 };

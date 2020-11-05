@@ -1,5 +1,6 @@
 import Service from "./service";
 import { IUserInput } from "./types";
+import React from "react";
 
 export default class Handler {
   constructor(

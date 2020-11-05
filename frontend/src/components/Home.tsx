@@ -4,9 +4,10 @@ import PrivateRoute from "../utils/PrivateRoute";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Dashboard from "./private/Dashboard";
 import About from "./public/About";
+import Profile from "./private/Profile";
 
 const Home: React.FC = () => {
-  const [headersValue, setHeadersValue] = useState<Headers | undefined>();
+  const [headers, setHeaders] = useState<Headers | undefined>();
 
   return (
     <div>
@@ -18,14 +19,21 @@ const Home: React.FC = () => {
             <Link to="/about">About</Link>
           </Route>
           <Route path="/login">
-            <Auth setHeadersValue={setHeadersValue} />
+            <Auth setHeadersValue={setHeaders} />
           </Route>
           <PrivateRoute
-            hasAccess={headersValue !== undefined}
+            hasAccess={headers !== undefined}
             path="/dashboard"
             fallbackPath="/login"
           >
-            <Dashboard headers={headersValue} />
+            <Dashboard headers={headers} setHeaders={setHeaders}/>
+          </PrivateRoute>
+          <PrivateRoute
+              hasAccess={headers !== undefined}
+              path="/profile"
+              fallbackPath="/login"
+          >
+            <Profile headers={headers} />
           </PrivateRoute>
           <Route>
             <About />

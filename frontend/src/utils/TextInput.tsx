@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
   fieldType?: string;
+  defaultValue?: string;
 }
 
 const TextInput: React.FC<Props> = (props) => {
-  let [textValue, setTextValue] = useState<string>("");
+  const [textValue, setTextValue] = useState<string>("");
+
+  useEffect(() => {
+    setTextValue(props.defaultValue || "");
+  }, [props.defaultValue]);
 
   const textChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextValue(event.target.value);

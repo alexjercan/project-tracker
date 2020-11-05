@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Project from "./Project";
 
 interface IProject {
   project_name: string;
   owner_username: string;
 }
 
-export interface IUserInput {
+interface IUserInput {
   project_name: string;
 }
 
 interface Props {
   headers: Headers | undefined;
-  setHeaders: React.Dispatch<React.SetStateAction<Headers | undefined>>;
 }
 
 const getProjects = async (
@@ -24,22 +24,23 @@ const getProjects = async (
   });
 
   if (response.status !== 200) return undefined;
-  const a = await response.json();
-  console.log(a);
-  return a as IProject[];
+  return (await response.json()) as IProject[];
 };
 
 const Dashboard: React.FC<Props> = (props) => {
-  const [response, setResponse] = useState<IProject[] | undefined>();
+  const [projects, setProjects] = useState<IProject[] | undefined>();
 
   useEffect(() => {
-    getProjects(props.headers).then((response) => setResponse(response));
-  }, [props.headers, setResponse]);
+    getProjects(props.headers).then((response) => setProjects(response));
+  }, [props.headers]);
 
   return (
     <div>
       <h2>Dashboard</h2>
       <Link to="/profile">Profile</Link>
+      {projects?.map((project) => (
+        <Project headers={props.headers} project={project} />
+      ))}
     </div>
   );
 };

@@ -26,12 +26,12 @@ const Home: React.FC = () => {
             path="/dashboard"
             fallbackPath="/login"
           >
-            <Dashboard headers={headers} setHeaders={setHeaders}/>
+            <Dashboard headers={headers} />
           </PrivateRoute>
           <PrivateRoute
-              hasAccess={headers !== undefined}
-              path="/profile"
-              fallbackPath="/login"
+            hasAccess={headers !== undefined}
+            path="/profile"
+            fallbackPath="/login"
           >
             <Profile headers={headers} />
           </PrivateRoute>

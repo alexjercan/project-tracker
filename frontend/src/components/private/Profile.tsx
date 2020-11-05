@@ -30,6 +30,18 @@ const getProfile = async (
   return (await response.json()) as IProfile;
 };
 
+const postProfile = async (
+    headers: Headers | undefined
+): Promise<IProfile | undefined> => {
+  const response = await fetch("/api/profile", {
+    method: "GET",
+    headers: headers,
+  });
+
+  if (response.status !== 200) return undefined;
+  return (await response.json()) as IProfile;
+};
+
 const Profile: React.FC<Props> = (props) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");

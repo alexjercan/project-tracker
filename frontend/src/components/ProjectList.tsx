@@ -13,18 +13,17 @@ interface IProject {
 
 const getProjects = async (
     headers: Headers | undefined
-): Promise<IProject[] | undefined> => {
+): Promise<IProject[]> => {
     const response = await fetch("/api/project", {
         method: "GET",
         headers: headers,
     });
 
-    if (response.status !== 200) return undefined;
+    if (response.status !== 200) return [];
     return (await response.json()) as IProject[];
 };
 
 const addProject = async (projectName: string, headers: Headers | undefined): Promise<IProject | undefined> => {
-    console.log(projectName);
     const response = await fetch("/api/project", {
         method: "POST",
         headers: headers,
@@ -36,7 +35,7 @@ const addProject = async (projectName: string, headers: Headers | undefined): Pr
 };
 
 const ProjectList: React.FC<Props> = (props) => {
-    const [projects, setProjects] = useState<IProject[] | undefined>();
+    const [projects, setProjects] = useState<IProject[]>([]);
     const [projectName, setProjectName] = useState<string>("");
 
     useEffect(() => {
@@ -45,7 +44,8 @@ const ProjectList: React.FC<Props> = (props) => {
 
     const addProjectClickedHandler = async () => {
         const project = await addProject(projectName, props.headers);
-        console.log(project);
+        if (project === undefined) return;
+        setProjects([...projects, project]);
     };
 
     return (

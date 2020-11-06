@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 import TextInput from "./utils/TextInput";
-
-interface IAuthInput {
-  username: string;
-  password: string;
-}
 
 interface IResponse {
   status: number;

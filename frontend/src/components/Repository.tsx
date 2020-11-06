@@ -2,16 +2,10 @@
 import { useParams } from "react-router-dom";
 import * as querystring from "querystring";
 import TextInput from "./utils/TextInput";
-
-const { URLSearchParams } = require("url");
+import CommentList from "./CommentList";
 
 interface Props {
   headers: Headers | undefined;
-}
-
-interface IProject {
-  projectName: string;
-  ownerUsername: string;
 }
 
 interface IRepository {
@@ -24,10 +18,11 @@ interface IRepository {
 }
 
 const getRepository = async (
-  project: IProject,
+  projectName: string,
+  ownerUsername: string,
   headers: Headers | undefined
 ): Promise<IRepository | undefined> => {
-  const query = querystring.stringify(project as {});
+  const query = querystring.stringify({ projectName, ownerUsername });
   const url = "/api/repository?" + query;
   const response = await fetch(url, {
     method: "GET",
@@ -60,10 +55,13 @@ const Repository: React.FC<Props> = (props) => {
   const [deadline, setDeadline] = useState<string>("");
   const [started, setStarted] = useState<string>("");
   const [lastModified, setLastModified] = useState<string>("");
-  const { ownerUsername, projectName } = useParams<IProject>();
+  const { ownerUsername, projectName } = useParams<{
+    ownerUsername: string;
+    projectName: string;
+  }>();
 
   useEffect(() => {
-    getRepository({ ownerUsername, projectName }, props.headers).then(
+    getRepository(ownerUsername, projectName, props.headers).then(
       (response) => {
         if (response === undefined) return undefined;
         setDescription(response.description);
@@ -104,6 +102,11 @@ const Repository: React.FC<Props> = (props) => {
       <button onClick={() => editRepositoryClickedHandler()}>
         Edit Repository
       </button>
+      <CommentList
+        ownerUsername={ownerUsername}
+        projectName={projectName}
+        headers={props.headers}
+      />
     </div>
   );
 };

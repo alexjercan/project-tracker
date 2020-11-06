@@ -23,7 +23,7 @@ const getProjects = async (
     return (await response.json()) as IProject[];
 };
 
-const addProject = async (projectName: string, headers: Headers | undefined): Promise<IProject | undefined> => {
+const addProject = async (projectName: string, headers: Headers | undefined): Promise<IProject[] | undefined> => {
     const response = await fetch("/api/project", {
         method: "POST",
         headers: headers,
@@ -31,7 +31,7 @@ const addProject = async (projectName: string, headers: Headers | undefined): Pr
     });
 
     if (response.status !== 200) return undefined;
-    return (await response.json()) as IProject;
+    return (await response.json()) as IProject[];
 };
 
 const ProjectList: React.FC<Props> = (props) => {
@@ -43,22 +43,23 @@ const ProjectList: React.FC<Props> = (props) => {
     }, [props.headers]);
 
     const addProjectClickedHandler = async () => {
-        const project = await addProject(projectName, props.headers);
-        if (project === undefined) return;
-        setProjects([...projects, project]);
+        const new_projects = await addProject(projectName, props.headers);
+        if (new_projects === undefined) return;
+        setProjects([...projects, ...new_projects]);
+        setProjectName("");
     };
 
     return (
         <div>
             <h3>Projects</h3>
             <div>Project Name
-                <TextInput setTextValue={setProjectName}/>
+                <TextInput setTextValue={setProjectName} defaultValue={projectName}/>
                 <button onClick={addProjectClickedHandler}>Add Project</button>
             </div>
             <ul>
-                {projects?.map((project) => (
+                {projects?.map((project, index) => (
                     <Project
-                        key={project.ownerUsername + "/" + project.projectName}
+                        key={index}
                         headers={props.headers}
                         project={project}
                     />

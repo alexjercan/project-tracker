@@ -499,11 +499,12 @@ begin
     v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
 
     open p_cursor for
-        select username, description, timestamp
+        select username, description, TO_CHAR(timestamp, 'DD-MM-YYYY HH:MI A.M.')
         from users
                  natural join comments
         where v_project_id = project_id
-          and v_exists = 1;
+          and v_exists = 1
+        order by timestamp desc;
 
     if v_exists = 1 then
         p_error := 0;

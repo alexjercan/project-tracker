@@ -18,11 +18,11 @@ interface IComment {
 }
 
 const getComments = async (
-  projectName: string,
   ownerUsername: string,
+  projectName: string,
   headers: Headers | undefined
 ): Promise<IComment[]> => {
-  const query = querystring.stringify({ projectName, ownerUsername });
+  const query = querystring.stringify({ ownerUsername, projectName });
   const url = "/api/comment?" + query;
   const response = await fetch(url, {
     method: "GET",
@@ -38,7 +38,7 @@ const addComment = async (
   projectName: string,
   description: string,
   headers: Headers | undefined
-): Promise<IComment | undefined> => {
+): Promise<IComment[] | undefined> => {
   const response = await fetch("/api/comment", {
     method: "POST",
     headers: headers,
@@ -46,7 +46,7 @@ const addComment = async (
   });
 
   if (response.status !== 200) return undefined;
-  return (await response.json()) as IComment;
+  return (await response.json()) as IComment[];
 };
 
 const CommentList: React.FC<Props> = (props) => {
@@ -55,35 +55,36 @@ const CommentList: React.FC<Props> = (props) => {
 
   useEffect(() => {
     getComments(
-      props.projectName,
       props.ownerUsername,
+      props.projectName,
       props.headers
     ).then((response) => setComments(response));
-  }, [props.headers]);
+  }, [props.projectName, props.ownerUsername, props.headers]);
 
-  const addProjectClickedHandler = async () => {
-    const project = await addComment(
-      props.projectName,
+  const addCommentClickedHandler = () => {
+    addComment(
       props.ownerUsername,
+      props.projectName,
       commentDescription,
       props.headers
-    );
-    if (project === undefined) return;
-    setComments([...comments, project]);
+    ).then((new_comments) => {
+      if (new_comments === undefined) return;
+      setComments([...new_comments, ...comments]);
+      setCommentDescription("");
+    });
   };
 
   return (
     <div>
-      <h3>Projects</h3>
+      <h3>Comments</h3>
       <div>
-        Project Name
-        <TextInput setTextValue={setCommentDescription} />
-        <button onClick={addProjectClickedHandler}>Add Project</button>
+        <TextInput setTextValue={setCommentDescription} defaultValue={commentDescription}/>
+        <button onClick={addCommentClickedHandler}>Add Comment</button>
       </div>
       <ul>
-        {comments?.map((comment) => (
+        {comments?.map((comment, index) => (
           <Comment
-            key={comment.username + "/" + comment.timestamp}
+            key={index}
             headers={props.headers}
             comment={comment}
           />

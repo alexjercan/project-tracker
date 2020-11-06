@@ -18,11 +18,11 @@ interface IRepository {
 }
 
 const getRepository = async (
-  projectName: string,
   ownerUsername: string,
+  projectName: string,
   headers: Headers | undefined
 ): Promise<IRepository | undefined> => {
-  const query = querystring.stringify({ projectName, ownerUsername });
+  const query = querystring.stringify({ ownerUsername, projectName });
   const url = "/api/repository?" + query;
   const response = await fetch(url, {
     method: "GET",
@@ -70,7 +70,7 @@ const Repository: React.FC<Props> = (props) => {
         setLastModified(response.lastModified);
       }
     );
-  }, [props.headers]);
+  }, [ownerUsername, projectName, props.headers]);
 
   const editRepositoryClickedHandler = async () => {
     const repository = await postRepository(

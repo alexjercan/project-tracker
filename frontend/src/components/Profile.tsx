@@ -31,11 +31,14 @@ const getProfile = async (
 };
 
 const postProfile = async (
+    userInput: IProfileInput,
     headers: Headers | undefined
 ): Promise<IProfile | undefined> => {
+  console.log(headers)
   const response = await fetch("/api/profile", {
-    method: "GET",
+    method: "POST",
     headers: headers,
+    body: JSON.stringify(userInput)
   });
 
   if (response.status !== 200) return undefined;
@@ -61,7 +64,7 @@ const Profile: React.FC<Props> = (props) => {
       setUsername(profile.username);
       setEmail(profile.email);
     });
-  }, []);
+  }, [props.headers]);
 
   useEffect(() => {
     setUserInput({
@@ -71,6 +74,17 @@ const Profile: React.FC<Props> = (props) => {
     });
   }, [firstName, lastName, email]);
 
+  const editProfileClickedHandler = async (userInput: IProfileInput) => {
+    const profile = await postProfile(userInput, props.headers);
+
+    if (profile === undefined) return;
+
+    setFirstName(profile.firstName);
+    setLastName(profile.lastName);
+    setUsername(profile.username);
+    setEmail(profile.email);
+  };
+  
   return (
     <div>
       <h2>Profile {username}</h2>
@@ -80,6 +94,9 @@ const Profile: React.FC<Props> = (props) => {
       <TextInput setTextValue={setLastName} defaultValue={lastName} />
       <div>Email</div>
       <TextInput setTextValue={setEmail} defaultValue={email} />
+      <button onClick={() => editProfileClickedHandler(userInput)}>
+        Edit Profile
+      </button>
     </div>
   );
 };

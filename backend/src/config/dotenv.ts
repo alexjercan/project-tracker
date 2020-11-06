@@ -9,6 +9,7 @@ export const dotenv = {
   server: {
     httpPort: +(process.env.HTTP_PORT ?? 8080),
     httpsPort: +(process.env.HTTPS_PORT ?? 8081),
+    nodeEnv: process.env.NODE_ENV ?? 'development',
   },
   auth: {
     secret: process.env.AUTH_SECRET ?? 'secret',

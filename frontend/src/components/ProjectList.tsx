@@ -42,6 +42,16 @@ const ProjectList: React.FC<Props> = (props) => {
         getProjects(props.headers).then((response) => setProjects(response));
     }, [props.headers]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getProjects(props.headers).then((response) => setProjects(response));
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    });
+    
     const addProjectClickedHandler = async () => {
         const new_projects = await addProject(projectName, props.headers);
         if (new_projects === undefined) return;

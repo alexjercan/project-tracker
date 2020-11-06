@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { ITokenUser } from './types';
 import url from 'url';
-import * as querystring from "querystring";
+import * as querystring from 'querystring';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -29,7 +29,10 @@ export default class Controller {
 
   async GetContributors(req: Request, res: Response, next: NextFunction) {
     const parsedUrl = url.parse(req.url);
-    const {ownerUsername, projectName} = querystring.parse(parsedUrl.query ?? "") as {ownerUsername: string, projectName: string};
+    const { ownerUsername, projectName } = querystring.parse(parsedUrl.query ?? '') as {
+      ownerUsername: string;
+      projectName: string;
+    };
 
     try {
       const contributorsData = await this._service.GetContributors(ownerUsername, projectName);

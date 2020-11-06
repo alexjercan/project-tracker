@@ -7,6 +7,7 @@ import express from 'express';
 import * as fs from 'fs';
 import https from 'https';
 import http from 'http';
+import path from 'path';
 
 const startServer = () => {
   const app = express();
@@ -23,10 +24,18 @@ const startServer = () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  app.get('/', (req, res) => res.status(200).send('ok'));
-
   app.use('/auth', auth());
   app.use('/api', api());
+
+  if (dotenv.server.nodeEnv === 'production' || dotenv.server.nodeEnv === 'staging') {
+    app.use(express.static(path.join(__dirname, 'build')));
+
+    app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+  } else {
+    app.get('/', (req, res) => res.status(200).send('ok'));
+  }
 
   const httpServer = http.createServer(app);
   // const httpsServer = https.createServer(credentials, app);

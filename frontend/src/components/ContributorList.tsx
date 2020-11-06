@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
 import TextInput from "./utils/TextInput";
-import Comment from "./Comment";
 import querystring from "querystring";
 import Contributor from "./Contributor";
 

@@ -27,29 +27,24 @@ const post = async (path: string, body: string): Promise<IResponse> => {
     body: body,
   });
 
+  response.headers.forEach((value, key) => console.log(value + " " + key));
   return { status: response.status, headers: response.headers };
 };
 
 const signIn = async (userInput: IAuthInput): Promise<Headers | undefined> => {
-  const response = await post(
-      "/auth/signin",
-      JSON.stringify(userInput)
-  );
+  const response = await post("/auth/signin", JSON.stringify(userInput));
 
   if (response.status !== 200) return undefined;
 
-return response.headers;
+  return response.headers;
 };
 
 const signUp = async (userInput: IAuthInput): Promise<Headers | undefined> => {
-  const response = await post(
-      "/auth/signup",
-      JSON.stringify(userInput)
-  );
+  const response = await post("/auth/signup", JSON.stringify(userInput));
 
   if (response.status !== 200) return undefined;
 
-return response.headers;
+  return response.headers;
 };
 
 const Auth: React.FC<Props> = (props) => {
@@ -74,7 +69,7 @@ const Auth: React.FC<Props> = (props) => {
 
   const signInClickedHandler = async (userInput: IAuthInput) => {
     const headers = await signIn(userInput);
-     props.setHeaders(headers);
+    props.setHeaders(headers);
 
     if (headers !== undefined) authenticationSuccessfulHandler();
   };
@@ -97,12 +92,8 @@ const Auth: React.FC<Props> = (props) => {
         <TextInput setTextValue={setPasswordValue} fieldType={"password"} />
       </div>
       <div>
-        <button onClick={() => signInClickedHandler(userInput)}>
-          SignIn
-        </button>
-        <button onClick={() => signUpClickedHandler(userInput)}>
-          SignUp
-        </button>
+        <button onClick={() => signInClickedHandler(userInput)}>SignIn</button>
+        <button onClick={() => signUpClickedHandler(userInput)}>SignUp</button>
       </div>
     </div>
   );

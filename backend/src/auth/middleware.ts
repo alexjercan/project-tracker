@@ -8,6 +8,6 @@ export const authSuccess = (req: Request, res: Response, next: NextFunction) => 
   const user: ITokenUser = { username };
   const token = sign({ user }, dotenv.auth.secret);
 
-  res.status(200).header(dotenv.auth.token, token).send('Authentication Successful');
+  res.status(200).header(dotenv.auth.token, token).send({ message: 'Authentication Successful' });
   next();
 };

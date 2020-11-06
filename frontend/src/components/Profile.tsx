@@ -31,14 +31,13 @@ const getProfile = async (
 };
 
 const postProfile = async (
-    userInput: IProfileInput,
-    headers: Headers | undefined
+  userInput: IProfileInput,
+  headers: Headers | undefined
 ): Promise<IProfile | undefined> => {
-  console.log(headers)
   const response = await fetch("/api/profile", {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(userInput)
+    body: JSON.stringify(userInput),
   });
 
   if (response.status !== 200) return undefined;
@@ -84,7 +83,7 @@ const Profile: React.FC<Props> = (props) => {
     setUsername(profile.username);
     setEmail(profile.email);
   };
-  
+
   return (
     <div>
       <h2>Profile {username}</h2>
@@ -94,6 +93,7 @@ const Profile: React.FC<Props> = (props) => {
       <TextInput setTextValue={setLastName} defaultValue={lastName} />
       <div>Email</div>
       <TextInput setTextValue={setEmail} defaultValue={email} />
+      <br />
       <button onClick={() => editProfileClickedHandler(userInput)}>
         Edit Profile
       </button>

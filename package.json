@@ -4,7 +4,6 @@
   "description": "",
   "scripts": {
     "all": "npm run build && npm run start",
-    "prebuid": "npm run prebuild_backend && npm run prebuild front_end",
     "build": "npm run build_backend && npm run build_frontend",
     "start": "cd backend && node .",
     "prebuild_backend": "cd backend && npm install",

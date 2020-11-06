@@ -5,12 +5,6 @@ interface Props {
   headers: Headers | undefined;
 }
 
-interface IProfileInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 interface IProfile {
   firstName: string;
   lastName: string;
@@ -31,13 +25,15 @@ const getProfile = async (
 };
 
 const postProfile = async (
-  userInput: IProfileInput,
+  firstName: string,
+  lastName: string,
+  email: string,
   headers: Headers | undefined
 ): Promise<IProfile | undefined> => {
   const response = await fetch("/api/profile", {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(userInput),
+    body: JSON.stringify({ firstName, lastName, email }),
   });
 
   if (response.status !== 200) return undefined;
@@ -49,11 +45,6 @@ const Profile: React.FC<Props> = (props) => {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [userInput, setUserInput] = useState<IProfileInput>({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
 
   useEffect(() => {
     getProfile(props.headers).then((profile: IProfile | undefined) => {
@@ -65,16 +56,8 @@ const Profile: React.FC<Props> = (props) => {
     });
   }, [props.headers]);
 
-  useEffect(() => {
-    setUserInput({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-    });
-  }, [firstName, lastName, email]);
-
-  const editProfileClickedHandler = async (userInput: IProfileInput) => {
-    const profile = await postProfile(userInput, props.headers);
+  const editProfileClickedHandler = async () => {
+    const profile = await postProfile(firstName, lastName, email, props.headers);
 
     if (profile === undefined) return;
 
@@ -94,7 +77,7 @@ const Profile: React.FC<Props> = (props) => {
       <div>Email</div>
       <TextInput setTextValue={setEmail} defaultValue={email} />
       <br />
-      <button onClick={() => editProfileClickedHandler(userInput)}>
+      <button onClick={() => editProfileClickedHandler()}>
         Edit Profile
       </button>
     </div>

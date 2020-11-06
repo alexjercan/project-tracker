@@ -26,8 +26,7 @@ const post = async (path: string, body: string): Promise<IResponse> => {
     },
     body: body,
   });
-
-  response.headers.forEach((value, key) => console.log(value + " " + key));
+  
   return { status: response.status, headers: response.headers };
 };
 

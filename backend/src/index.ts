@@ -28,10 +28,10 @@ const startServer = () => {
   app.use('/api', api());
 
   if (dotenv.server.nodeEnv === 'production' || dotenv.server.nodeEnv === 'staging') {
-    app.use(express.static(path.join(__dirname, 'build')));
+    app.use(express.static(path.join(__dirname, dotenv.server.nodeFrontendPath)));
 
     app.get('/', (req, res) => {
-      res.sendFile(path.join(__dirname, 'build', 'index.html'));
+      res.sendFile(path.join(__dirname, dotenv.server.nodeFrontendPath, 'index.html'));
     });
   } else {
     app.get('/', (req, res) => res.status(200).send('ok'));

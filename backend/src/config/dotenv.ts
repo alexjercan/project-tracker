@@ -10,6 +10,7 @@ export const dotenv = {
     httpPort: +(process.env.HTTP_PORT ?? 8080),
     httpsPort: +(process.env.HTTPS_PORT ?? 8081),
     nodeEnv: process.env.NODE_ENV ?? 'development',
+    nodeFrontendPath: process.env.NODE_FRONEND_PATH ?? '../../frontend/build',
   },
   auth: {
     secret: process.env.AUTH_SECRET ?? 'secret',

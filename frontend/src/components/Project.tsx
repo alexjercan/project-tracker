@@ -13,9 +13,11 @@ interface IProject {
 
 const Project: React.FC<Props> = (props) => {
   return (
-    <Link to={{pathname: `/${props.project?.ownerUsername}/${props.project?.projectName}`}} >
-      {props.project?.ownerUsername}/{props.project?.projectName}
-    </Link>
+    <li>
+      <Link to={{pathname: `/${props.project?.ownerUsername}/${props.project?.projectName}`}} >
+        {props.project?.ownerUsername}/{props.project?.projectName}
+      </Link>
+    </li>
   );
 };
 

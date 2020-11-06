@@ -30,16 +30,16 @@ const post = async (path: string, body: string): Promise<IResponse> => {
   return { status: response.status, headers: response.headers };
 };
 
-const signIn = async (userInput: IAuthInput): Promise<Headers | undefined> => {
-  const response = await post("/auth/signin", JSON.stringify(userInput));
+const signIn = async (username: string, password: string): Promise<Headers | undefined> => {
+  const response = await post("/auth/signin", JSON.stringify({username, password}));
 
   if (response.status !== 200) return undefined;
 
   return response.headers;
 };
 
-const signUp = async (userInput: IAuthInput): Promise<Headers | undefined> => {
-  const response = await post("/auth/signup", JSON.stringify(userInput));
+const signUp = async (username: string, password: string): Promise<Headers | undefined> => {
+  const response = await post("/auth/signup", JSON.stringify({username, password}));
 
   if (response.status !== 200) return undefined;
 
@@ -49,32 +49,24 @@ const signUp = async (userInput: IAuthInput): Promise<Headers | undefined> => {
 const Auth: React.FC<Props> = (props) => {
   const [usernameValue, setUsernameValue] = useState<string>("");
   const [passwordValue, setPasswordValue] = useState<string>("");
-  const [userInput, setUserInput] = useState<IAuthInput>({
-    username: "",
-    password: "",
-  });
 
   const history = useHistory<any>();
   const location = useLocation<any>();
-
-  useEffect(() => {
-    setUserInput({ username: usernameValue, password: passwordValue });
-  }, [usernameValue, passwordValue]);
 
   const authenticationSuccessfulHandler = () => {
     const { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
   };
 
-  const signInClickedHandler = async (userInput: IAuthInput) => {
-    const headers = await signIn(userInput);
+  const signInClickedHandler = async () => {
+    const headers = await signIn(usernameValue, passwordValue);
     props.setHeaders(headers);
 
     if (headers !== undefined) authenticationSuccessfulHandler();
   };
 
-  const signUpClickedHandler = async (userInput: IAuthInput) => {
-    const headers = await signUp(userInput);
+  const signUpClickedHandler = async () => {
+    const headers = await signUp(usernameValue, passwordValue);
     props.setHeaders(headers);
 
     if (headers !== undefined) authenticationSuccessfulHandler();
@@ -91,8 +83,8 @@ const Auth: React.FC<Props> = (props) => {
         <TextInput setTextValue={setPasswordValue} fieldType={"password"} />
       </div>
       <div>
-        <button onClick={() => signInClickedHandler(userInput)}>SignIn</button>
-        <button onClick={() => signUpClickedHandler(userInput)}>SignUp</button>
+        <button onClick={() => signInClickedHandler()}>SignIn</button>
+        <button onClick={() => signUpClickedHandler()}>SignUp</button>
       </div>
     </div>
   );

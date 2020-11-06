@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import Auth from './Auth';
+import Auth from "./Auth";
 import PrivateRoute from "./utils/PrivateRoute";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
 import Dashboard from "./Dashboard";
 import About from "./About";
 import Profile from "./Profile";
+import Repository from "./Repository";
 
 const Home: React.FC = () => {
   const [headers, setHeaders] = useState<Headers | undefined>();
@@ -32,16 +38,12 @@ const Home: React.FC = () => {
             hasAccess={headers !== undefined}
             path="/profile"
             fallbackPath="/login"
-          >
-            <Profile headers={headers} />
-          </PrivateRoute>
-          <PrivateRoute
-              hasAccess={headers !== undefined}
-              path="/:username/:project_name"
-              fallbackPath="/login"
-          >
-            <About />
-          </PrivateRoute>
+            children={<Profile headers={headers} />}
+          />
+          <Route
+            path="/:ownerUsername/:projectName"
+            children={<Repository headers={headers} />}
+          />
           <Route>
             <About />
           </Route>

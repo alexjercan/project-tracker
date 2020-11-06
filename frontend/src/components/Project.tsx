@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 interface Props {
   headers: Headers | undefined;
-  project: IProject | undefined;
+  project: IProject;
 }
 
 interface IProject {

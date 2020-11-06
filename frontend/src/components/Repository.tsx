@@ -74,6 +74,24 @@ const Repository: React.FC<Props> = (props) => {
     );
   }, [ownerUsername, projectName, props.headers]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getRepository(ownerUsername, projectName, props.headers).then(
+        (response) => {
+          if (response === undefined) return undefined;
+          setDescription(response.description);
+          setDeadline(response.deadline);
+          setStarted(response.started);
+          setLastModified(response.lastModified);
+        }
+      );
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
   const editRepositoryClickedHandler = async () => {
     const repository = await postRepository(
       ownerUsername,

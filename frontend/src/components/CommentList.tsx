@@ -55,11 +55,25 @@ const CommentList: React.FC<Props> = (props) => {
 
   useEffect(() => {
     getComments(
-      props.ownerUsername,
-      props.projectName,
-      props.headers
+        props.ownerUsername,
+        props.projectName,
+        props.headers
     ).then((response) => setComments(response));
   }, [props.projectName, props.ownerUsername, props.headers]);
+  
+  useEffect(() => {    
+    const interval = setInterval(() => {
+      getComments(
+        props.ownerUsername,
+        props.projectName,
+        props.headers
+      ).then((response) => setComments(response));
+    }, 1000);
+    
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   const addCommentClickedHandler = () => {
     addComment(
@@ -78,16 +92,15 @@ const CommentList: React.FC<Props> = (props) => {
     <div>
       <h3>Comments</h3>
       <div>
-        <TextInput setTextValue={setCommentDescription} defaultValue={commentDescription}/>
+        <TextInput
+          setTextValue={setCommentDescription}
+          defaultValue={commentDescription}
+        />
         <button onClick={addCommentClickedHandler}>Add Comment</button>
       </div>
       <ul>
         {comments?.map((comment, index) => (
-          <Comment
-            key={index}
-            headers={props.headers}
-            comment={comment}
-          />
+          <Comment key={index} headers={props.headers} comment={comment} />
         ))}
       </ul>
     </div>

@@ -4,6 +4,7 @@ import * as querystring from "querystring";
 import TextInput from "./utils/TextInput";
 import CommentList from "./CommentList";
 import ContributorList from "./ContributorList";
+import TextAreaInput from "./utils/TextAreaInput";
 
 interface Props {
   headers: Headers | undefined;
@@ -95,7 +96,7 @@ const Repository: React.FC<Props> = (props) => {
       <h2>Repository {projectName}</h2>
       <div>Owner {ownerUsername}</div>
       <div>Description</div>
-      <TextInput setTextValue={setDescription} defaultValue={description} />
+      <TextAreaInput setTextValue={setDescription} defaultValue={description} />
       <div>Deadline</div>
       <TextInput setTextValue={setDeadline} defaultValue={deadline} />
       <div>Started {started}</div>

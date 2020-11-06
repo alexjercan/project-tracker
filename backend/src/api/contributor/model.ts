@@ -56,8 +56,8 @@ export default class Model {
       if (record === undefined) return undefined;
       return {
         projectName: record[0],
-        ownerUsername: record[1],
-        contributorUsername: ownerUsername,
+        contributorUsername: record[1],
+        ownerUsername: ownerUsername,
       };
     };
 

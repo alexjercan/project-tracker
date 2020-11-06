@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import * as querystring from "querystring";
 import TextInput from "./utils/TextInput";
 import CommentList from "./CommentList";
+import ContributorList from "./ContributorList";
 
 interface Props {
   headers: Headers | undefined;
@@ -102,6 +103,11 @@ const Repository: React.FC<Props> = (props) => {
       <button onClick={() => editRepositoryClickedHandler()}>
         Edit Repository
       </button>
+      <ContributorList
+        ownerUsername={ownerUsername}
+        projectName={projectName}
+        headers={props.headers}
+      />
       <CommentList
         ownerUsername={ownerUsername}
         projectName={projectName}

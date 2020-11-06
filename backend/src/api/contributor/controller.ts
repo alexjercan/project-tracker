@@ -2,6 +2,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { ITokenUser } from './types';
+const url = require('url');
+const querystring = require('querystring');
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -26,10 +28,11 @@ export default class Controller {
   }
 
   async GetContributors(req: Request, res: Response, next: NextFunction) {
-    const { user }: IVerified = req.body.verified as IVerified;
+    const parsedUrl = url.parse(req.url);
+    const parsedQs = querystring.parse(parsedUrl.query);
 
     try {
-      const contributorsData = await this._service.GetContributors(req.body.ownerUsername, req.body.projectName);
+      const contributorsData = await this._service.GetContributors(parsedQs.ownerUsername, parsedQs.projectName);
       if (contributorsData === undefined) return res.status(401).send({ message: 'Invalid Contributor' });
 
       req.body.contributors = contributorsData;

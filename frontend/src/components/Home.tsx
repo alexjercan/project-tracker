@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import Auth from "./Auth";
 import PrivateRoute from "./utils/PrivateRoute";
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import About from "./About";
 import Profile from "./Profile";
@@ -40,8 +35,10 @@ const Home: React.FC = () => {
             fallbackPath="/login"
             children={<Profile headers={headers} />}
           />
-          <Route
+          <PrivateRoute
+            hasAccess={headers !== undefined}
             path="/:ownerUsername/:projectName"
+            fallbackPath="/login"
             children={<Repository headers={headers} />}
           />
           <Route>

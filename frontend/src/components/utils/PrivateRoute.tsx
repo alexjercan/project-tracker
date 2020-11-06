@@ -11,6 +11,7 @@ interface Props {
 const PrivateRoute: React.FC<Props> = (props) => {
   return (
     <Route
+      path={props.path}
       render={({ location }) =>
         props.hasAccess ? (
           props.children

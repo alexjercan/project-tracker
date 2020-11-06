@@ -1,14 +1,14 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
-import { IProject, IProjectInput, IProjectKey } from './types';
+import { IProject } from './types';
 import oracledb from 'oracledb';
 
 export default class Model {
-  async Create(projectKey: IProjectKey, projectInput: IProjectInput): Promise<IProject | undefined> {
+  async Create(ownerUsername: string, projectName: string): Promise<IProject | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN insertProject(p_project_name => :project_name, p_owner_username => :owner_username, p_error => :error); END;`,
       {
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.project_name },
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.owner_username },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -19,15 +19,15 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...projectKey, ...projectInput };
+    return { ownerUsername, projectName };
   }
 
-  async FindOne(projectKey: IProjectKey): Promise<IProject | undefined> {
+  async FindOne(ownerUsername: string, projectName: string): Promise<IProject | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN doesProjectExists(p_project_name => :project_name, p_owner_username => :owner_username, p_error => :error); END;`,
       {
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.project_name },
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectKey.owner_username },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       {},
@@ -38,15 +38,15 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...projectKey };
+    return { ownerUsername, projectName };
   }
 
   async FindAll(username: string): Promise<IProject[] | undefined> {
     const rowToObject = (record: any[]): IProject | undefined => {
       if (record === undefined) return undefined;
       return {
-        project_name: record[0],
-        owner_username: record[1],
+        projectName: record[0],
+        ownerUsername: record[1],
       };
     };
 

@@ -1,14 +1,14 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
-import { IUser, IUserInput, IUserKey } from './types';
+import { IUser } from './types';
 import oracledb from 'oracledb';
 
 export default class Model {
-  async Create(userKey: IUserKey, userInput: IUserInput): Promise<IUser | undefined> {
+  async Create(username: string, password: string): Promise<IUser | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN insertUser(p_username => :username, p_password => :password, p_error => :error); END;`,
       {
-        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: userKey.username },
-        password: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: userInput.password },
+        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
+        password: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: password },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -18,14 +18,14 @@ export default class Model {
 
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
-    return { ...userKey, ...userInput };
+    return { username, password };
   }
 
-  async FindOne(userKey: IUserKey): Promise<IUser | undefined> {
+  async FindOne(username: string): Promise<IUser | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ password: string; error: number }>(
       `BEGIN getPassword(p_username => :username, p_password => :password, p_error => :error); END;`,
       {
-        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: userKey.username },
+        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
         password: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
@@ -37,6 +37,6 @@ export default class Model {
     const error = result.outBinds.error;
     const password = result.outBinds.password;
     if (error !== 0 || password === undefined) return undefined;
-    return { ...userKey, password };
+    return { username, password };
   }
 }

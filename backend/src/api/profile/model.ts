@@ -1,16 +1,16 @@
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import oracledb from 'oracledb';
-import { IProfile, IProfileInput, IProfileKey } from './types';
+import { IProfile } from './types';
 
 export default class Model {
-  async Edit(profileKey: IProfileKey, profileInput: IProfileInput): Promise<IProfile | undefined> {
+  async Edit(username: string, firstName: string, lastName: string, email: string): Promise<IProfile | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN editProfile(p_username => :username, p_first_name => :first_name, p_last_name => :last_name, p_email => :email, p_error => :error); END;`,
       {
-        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: profileKey.username },
-        first_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: profileInput.first_name },
-        last_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: profileInput.last_name },
-        email: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: profileInput.email },
+        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
+        first_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: firstName },
+        last_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: lastName },
+        email: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: email },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -21,10 +21,10 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...profileKey, ...profileInput };
+    return { username, firstName, lastName, email,};
   }
 
-  async FindOne(profileKey: IProfileKey): Promise<IProfile | undefined> {
+  async FindOne(username: string): Promise<IProfile | undefined> {
     const result = await oracledbWrapper.simpleExecute<{
       first_name: string;
       last_name: string;
@@ -33,7 +33,7 @@ export default class Model {
     }>(
       `BEGIN getProfile(p_username => :username, p_first_name => :first_name, p_last_name => :last_name, p_email => :email, p_error => :error); END;`,
       {
-        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: profileKey.username },
+        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
         first_name: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
         last_name: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
         email: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
@@ -48,10 +48,10 @@ export default class Model {
     if (error !== 0) return undefined;
 
     return {
-      ...profileKey,
+      username,
       email: result.outBinds.email,
-      first_name: result.outBinds.first_name,
-      last_name: result.outBinds.last_name,
+      firstName: result.outBinds.first_name,
+      lastName: result.outBinds.last_name,
     };
   }
 }

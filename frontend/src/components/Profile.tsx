@@ -1,19 +1,19 @@
 ﻿import React, { useEffect, useState } from "react";
-import TextInput from "../../utils/TextInput";
+import TextInput from "./utils/TextInput";
 
 interface Props {
   headers: Headers | undefined;
 }
 
-interface IUserInput {
+interface IProfileInput {
   firstName: string;
-  last_name: string;
+  lastName: string;
   email: string;
 }
 
 interface IProfile {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
 }
@@ -47,17 +47,17 @@ const Profile: React.FC<Props> = (props) => {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [userInput, setUserInput] = useState<IUserInput>({
+  const [userInput, setUserInput] = useState<IProfileInput>({
     firstName: "",
-    last_name: "",
+    lastName: "",
     email: "",
   });
 
   useEffect(() => {
     getProfile(props.headers).then((profile: IProfile | undefined) => {
       if (profile === undefined) return;
-      setFirstName(profile.first_name);
-      setLastName(profile.last_name);
+      setFirstName(profile.firstName);
+      setLastName(profile.lastName);
       setUsername(profile.username);
       setEmail(profile.email);
     });
@@ -66,7 +66,7 @@ const Profile: React.FC<Props> = (props) => {
   useEffect(() => {
     setUserInput({
       firstName: firstName,
-      last_name: lastName,
+      lastName: lastName,
       email: email,
     });
   }, [firstName, lastName, email]);

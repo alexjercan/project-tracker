@@ -2,22 +2,11 @@
   username: string;
 }
 
-export interface IRepositoryKey {
-  username: string;
-  owner_username: string;
-  project_name: string;
-}
-
-export interface IRepositoryInput {
-  description: string;
-  deadline: string;
-}
-
 export interface IRepository {
-  owner_username: string;
-  project_name: string;
+  ownerUsername: string;
+  projectName: string;
   description: string;
   deadline: string;
   started: string;
-  last_modified: string;
+  lastModified: string;
 }

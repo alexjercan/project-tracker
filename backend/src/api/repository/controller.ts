@@ -1,8 +1,7 @@
 ﻿import { NextFunction, Request, Response } from 'express';
 import Service from './service';
 import { IVerified } from '@alexjercan/jwt-wrapper';
-import { IRepositoryKey, ITokenUser } from './types';
-import { IRepositoryInput } from './types';
+import { ITokenUser } from './types';
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -10,10 +9,9 @@ export default class Controller {
   async GetRepository(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { username }: ITokenUser = user as ITokenUser;
-    const { owner_username, project_name }: IRepositoryKey = req.body as IRepositoryKey;
 
     try {
-      const repositoryData = await this._service.GetRepository({ username, owner_username, project_name });
+      const repositoryData = await this._service.GetRepository(username, req.body.ownerUsername, req.body.projectName);
       if (repositoryData === undefined) return res.status(401).send({ message: 'Invalid Repository' });
 
       req.body.repository = repositoryData;
@@ -26,13 +24,14 @@ export default class Controller {
   async EditRepository(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { username }: ITokenUser = user as ITokenUser;
-    const { owner_username, project_name }: IRepositoryKey = req.body as IRepositoryKey;
-    const { description, deadline }: IRepositoryInput = req.body as IRepositoryInput;
 
     try {
       const repositoryData = await this._service.EditRepository(
-        { username, owner_username, project_name },
-        { description, deadline },
+        username,
+        req.body.ownerUsername,
+        req.body.projectName,
+        req.body.description,
+        req.body.deadline,
       );
       if (repositoryData === undefined) return res.status(401).send({ message: 'Invalid Repository' });
 

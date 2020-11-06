@@ -1,12 +1,17 @@
 ﻿import Model from './model';
-import { IComment, ICommentKey, ICommentInput } from './types';
+import { IComment } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
-  async AddComment(commentKey: ICommentKey, commentInput: ICommentInput): Promise<IComment | undefined> {
+  async AddComment(
+    ownerUsername: string,
+    projectName: string,
+    username: string,
+    description: string,
+  ): Promise<IComment | undefined> {
     try {
-      return await this._model.Create(commentKey, commentInput);
+      return await this._model.Create(ownerUsername, projectName, username, description);
     } catch (error) {
       throw error;
     }

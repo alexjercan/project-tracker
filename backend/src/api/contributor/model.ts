@@ -1,22 +1,19 @@
 ﻿import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import oracledb from 'oracledb';
-import { IContributor, IContributorInput, IContributorKey } from './types';
+import { IContributor } from './types';
 
 export default class Model {
   async Create(
-    contributorKey: IContributorKey,
-    contributorInput: IContributorInput,
+    projectName: string,
+    ownerUsername: string,
+    contributorUsername: string,
   ): Promise<IContributor | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN insertContributor(p_project_name => :project_name, p_owner_username => :owner_username, p_contributor_username => :contributor_username, p_error => :error); END;`,
       {
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorKey.project_name },
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorKey.owner_username },
-        contributor_username: {
-          dir: oracledb.BIND_IN,
-          type: oracledb.STRING,
-          val: contributorKey.contributor_username,
-        },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
+        contributor_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorUsername },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -27,20 +24,20 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...contributorKey, ...contributorInput };
+    return { projectName, ownerUsername, contributorUsername };
   }
 
-  async FindOne(contributorKey: IContributorKey): Promise<IContributor | undefined> {
+  async FindOne(
+    projectName: string,
+    ownerUsername: string,
+    contributorUsername: string,
+  ): Promise<IContributor | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ error: number }>(
       `BEGIN doesContributorExists(p_project_name => :project_name, p_owner_username => :owner_username, p_contributor_username => :contributor_username, p_error => :error); END;`,
       {
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorKey.project_name },
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorKey.owner_username },
-        contributor_username: {
-          dir: oracledb.BIND_IN,
-          type: oracledb.STRING,
-          val: contributorKey.contributor_username,
-        },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
+        contributor_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: contributorUsername },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true },
@@ -51,16 +48,16 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { ...contributorKey };
+    return { projectName, ownerUsername, contributorUsername };
   }
 
   async FindAll(ownerUsername: string, projectName: string): Promise<IContributor[] | undefined> {
     const rowToObject = (record: any[]): IContributor | undefined => {
       if (record === undefined) return undefined;
       return {
-        project_name: record[0],
-        contributor_username: record[1],
-        owner_username: ownerUsername,
+        projectName: record[0],
+        ownerUsername: record[1],
+        contributorUsername: ownerUsername,
       };
     };
 

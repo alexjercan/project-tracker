@@ -1,16 +1,21 @@
-﻿import { IComment, ICommentKey, ICommentInput } from './types';
+import { IComment } from './types';
 import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import oracledb from 'oracledb';
 
 export default class Model {
-  async Create(commentKey: ICommentKey, commentInput: ICommentInput): Promise<IComment | undefined> {
+  async Create(
+    ownerUsername: string,
+    projectName: string,
+    username: string,
+    description: string,
+  ): Promise<IComment | undefined> {
     const result = await oracledbWrapper.simpleExecute<{ timestamp: string; error: number }>(
       `BEGIN insertComment(p_owner_username => :owner_username, p_project_name => :project_name, p_username => :username, p_description => :description, p_timestamp => :timestamp, p_error => :error); END;`,
       {
-        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: commentKey.owner_username },
-        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: commentKey.project_name },
-        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: commentKey.username },
-        description: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: commentInput.description },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: username },
+        description: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: description },
         timestamp: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
         error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
@@ -25,7 +30,7 @@ export default class Model {
     const timestamp = result.outBinds.timestamp;
     if (timestamp === undefined) return undefined;
 
-    return { ...commentKey, ...commentInput, timestamp };
+    return { ownerUsername, projectName, username, description, timestamp };
   }
 
   async FindAll(ownerUsername: string, projectName: string, username: string): Promise<IComment[] | undefined> {
@@ -35,8 +40,8 @@ export default class Model {
         username: record[0],
         description: record[1],
         timestamp: record[2],
-        project_name: projectName,
-        owner_username: ownerUsername,
+        projectName,
+        ownerUsername,
       };
     };
 

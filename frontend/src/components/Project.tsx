@@ -6,12 +6,12 @@ interface Props {
 }
 
 interface IProject {
-  project_name: string;
-  owner_username: string;
+  projectName: string;
+  ownerUsername: string;
 }
 
 const Project: React.FC<Props> = (props) => {
-  return <div>{props.project?.owner_username}/{props.project?.project_name}</div>;
+  return <div>{props.project?.ownerUsername}/{props.project?.projectName}</div>;
 };
 
 export default Project;

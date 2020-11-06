@@ -134,6 +134,7 @@ begin
 
     return v_user_id;
 end;
+/
 
 create or replace function getProjectId(p_owner_username in string, p_project_name in string) return number
     is
@@ -150,7 +151,7 @@ begin
 
     return v_project_id;
 end;
-
+/
 
 create or replace function doesContributorExistFunc(p_project_name in string, p_owner_username in string,
                                                     p_username in string) return number
@@ -180,7 +181,7 @@ exception
     when others then
         return 0;
 end;
-
+/
 
 ------- PROCEDURES --------
 
@@ -484,6 +485,7 @@ exception
     when others then
         p_error := 1;
 end;
+/
 
 create or replace procedure getComments(p_username in string, p_owner_username in string, p_project_name in string,
                                         p_cursor out sys_refcursor, p_error out number)
@@ -513,3 +515,4 @@ exception
         open p_cursor for select null from dual;
         p_error := 1;
 end;
+/

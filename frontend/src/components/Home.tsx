@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Auth } from "./auth";
-import PrivateRoute from "../utils/PrivateRoute";
+import Auth from './Auth';
+import PrivateRoute from "./utils/PrivateRoute";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import Dashboard from "./private/Dashboard";
-import About from "./public/About";
-import Profile from "./private/Profile";
+import Dashboard from "./Dashboard";
+import About from "./About";
+import Profile from "./Profile";
 
 const Home: React.FC = () => {
   const [headers, setHeaders] = useState<Headers | undefined>();
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
             <Link to="/about">About</Link>
           </Route>
           <Route path="/login">
-            <Auth setHeadersValue={setHeaders} />
+            <Auth setHeaders={setHeaders} />
           </Route>
           <PrivateRoute
             hasAccess={headers !== undefined}

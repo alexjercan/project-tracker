@@ -1,18 +1,19 @@
 ﻿import Model from './model';
-import { IContributor, IContributorInput, IContributorKey } from './types';
+import { IContributor } from './types';
 
 export default class Service {
   constructor(private _model: Model) {}
 
   async AddContributor(
-    contributorKey: IContributorKey,
-    contributorInput: IContributorInput,
+    projectName: string,
+    ownerUsername: string,
+    contributorUsername: string,
   ): Promise<IContributor | undefined> {
     try {
-      const record = await this._model.FindOne(contributorKey);
+      const record = await this._model.FindOne(projectName, ownerUsername, contributorUsername);
       if (record !== undefined) return undefined;
 
-      return await this._model.Create(contributorKey, contributorInput);
+      return await this._model.Create(projectName, ownerUsername, contributorUsername);
     } catch (error) {
       throw error;
     }

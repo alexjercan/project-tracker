@@ -1,4 +1,4 @@
-﻿import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
+import * as oracledbWrapper from '@alexjercan/oracledb-wrapper';
 import oracledb from 'oracledb';
 import { IContributor } from './types';
 
@@ -57,7 +57,7 @@ export default class Model {
       return {
         projectName: record[0],
         contributorUsername: record[1],
-        ownerUsername: ownerUsername,
+        ownerUsername,
       };
     };
 

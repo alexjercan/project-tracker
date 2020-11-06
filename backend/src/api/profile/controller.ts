@@ -9,7 +9,6 @@ export default class Controller {
   async EditProfile(req: Request, res: Response, next: NextFunction) {
     const { user }: IVerified = req.body.verified as IVerified;
     const { username }: ITokenUser = user as ITokenUser;
-console.log(req.body);
     try {
       const profileData = await this._service.EditProfile(
         username,

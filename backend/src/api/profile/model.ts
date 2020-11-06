@@ -21,7 +21,7 @@ export default class Model {
     const error = result.outBinds.error;
     if (error !== 0) return undefined;
 
-    return { username, firstName, lastName, email,};
+    return { username, firstName, lastName, email };
   }
 
   async FindOne(username: string): Promise<IProfile | undefined> {

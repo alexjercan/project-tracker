@@ -2,8 +2,8 @@
 import Service from './service';
 import { IVerified } from '@alexjercan/jwt-wrapper';
 import { ITokenUser } from './types';
-const url = require('url');
-const querystring = require('querystring');
+import url from 'url';
+import * as querystring from "querystring";
 
 export default class Controller {
   constructor(private _service: Service) {}
@@ -12,10 +12,10 @@ export default class Controller {
     const { user }: IVerified = req.body.verified as IVerified;
     const { username }: ITokenUser = user as ITokenUser;
     const parsedUrl = url.parse(req.url);
-    const parsedQs = querystring.parse(parsedUrl.query);
-    
+    const {ownerUsername, projectName} = querystring.parse(parsedUrl.query ?? "") as {ownerUsername: string, projectName: string};
+
     try {
-      const repositoryData = await this._service.GetRepository(username, parsedQs.ownerUsername, parsedQs.projectName);
+      const repositoryData = await this._service.GetRepository(username, ownerUsername, projectName);
       if (repositoryData === undefined) return res.status(401).send({ message: 'Invalid Repository' });
 
       req.body.repository = repositoryData;

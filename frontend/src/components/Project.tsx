@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   headers: Headers | undefined;
@@ -11,7 +12,11 @@ interface IProject {
 }
 
 const Project: React.FC<Props> = (props) => {
-  return <div>{props.project?.ownerUsername}/{props.project?.projectName}</div>;
+  return (
+    <Link to={{pathname: `/${props.project?.ownerUsername}/${props.project?.projectName}`}} >
+      {props.project?.ownerUsername}/{props.project?.projectName}
+    </Link>
+  );
 };
 
 export default Project;

@@ -35,6 +35,13 @@ const Home: React.FC = () => {
           >
             <Profile headers={headers} />
           </PrivateRoute>
+          <PrivateRoute
+              hasAccess={headers !== undefined}
+              path="/:username/:project_name"
+              fallbackPath="/login"
+          >
+            <About />
+          </PrivateRoute>
           <Route>
             <About />
           </Route>

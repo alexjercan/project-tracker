@@ -4,10 +4,15 @@ import api from './api';
 import bodyParser from 'body-parser';
 import { dotenv } from './config';
 import express from 'express';
+import http from 'http';
 import path from 'path';
 
 const startServer = () => {
   const app = express();
+
+  process.on('uncaughtException', () => shutdown());
+  process.on('SIGTERM', () => shutdown());
+  process.on('SIGINT', () => shutdown());
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
@@ -27,7 +32,12 @@ const startServer = () => {
     app.get('/', (req, res) => res.status(200).send('ok'));
   }
 
-  app.listen(dotenv.server.port);
+  const httpServer = http.createServer(app);
+  httpServer.listen(dotenv.server.port);
+
+  const shutdown = () => {
+    httpServer.close();
+  };
 };
 
 oracledbWrapper.createPool(dotenv.database).then(() => {

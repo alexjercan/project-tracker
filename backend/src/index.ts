@@ -35,13 +35,14 @@ const startServer = () => {
   const httpServer = http.createServer(app);
   httpServer.listen(dotenv.server.port);
 
+  // tslint:disable-next-line: no-console
+  console.log(`Listening on port ${dotenv.server.port}`);
+
   const shutdown = () => {
     httpServer.close();
   };
 };
 
 oracledbWrapper.createPool(dotenv.database).then(() => {
-  // tslint:disable-next-line: no-console
-  console.log('Server Starting');
   startServer();
 });

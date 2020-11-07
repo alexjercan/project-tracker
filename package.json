@@ -6,8 +6,8 @@
     "all": "npm run build && npm run start",
     "build": "npm run build_backend && npm run build_frontend",
     "start": "cd backend && node .",
-    "prebuild_backend": "cd backend && npm install",
-    "prebuild_frontend": "cd frontend && npm install",
+    "prebuild_backend": "cd backend && npm install --production=false",
+    "prebuild_frontend": "cd frontend && npm install --production=false",
     "build_backend": "cd backend && npm run build",
     "build_frontend": "cd frontend && npm run build"
   },

@@ -7,8 +7,7 @@ export const dotenv = {
     poolMax: +(process.env.ORACLEDB_POOL_MAX ?? 10),
   },
   server: {
-    httpPort: +(process.env.HTTP_PORT ?? 8080),
-    httpsPort: +(process.env.HTTPS_PORT ?? 8081),
+    port: +(process.env.PORT ?? 8080),
     nodeEnv: process.env.NODE_ENV ?? 'development',
     nodeFrontendPath: process.env.NODE_FRONEND_PATH ?? '../../frontend/build',
   },

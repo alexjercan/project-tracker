@@ -8,10 +8,6 @@ import path from 'path';
 
 const startServer = () => {
   const app = express();
-  
-  process.on('uncaughtException', () => shutdown());
-  process.on('SIGTERM', () => shutdown());
-  process.on('SIGINT', () => shutdown());
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
@@ -32,9 +28,6 @@ const startServer = () => {
   }
 
   app.listen(dotenv.server.port);
-
-  const shutdown = () => {
-  };
 };
 
 oracledbWrapper.createPool(dotenv.database).then(() => {

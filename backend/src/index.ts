@@ -27,6 +27,8 @@ const startServer = () => {
   app.use('/auth', auth());
   app.use('/api', api());
 
+  app.get('/ok', (req, res) => res.status(200).send('ok'));
+
   if (dotenv.server.nodeEnv === 'production' || dotenv.server.nodeEnv === 'staging') {
     app.use(express.static(path.join(__dirname, dotenv.server.nodeFrontendPath)));
 

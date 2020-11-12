@@ -82,9 +82,9 @@ const CommentList: React.FC<Props> = (props) => {
       commentDescription,
       props.headers
     ).then((new_comments) => {
+      setCommentDescription("");
       if (new_comments === undefined) return;
       setComments([...new_comments, ...comments]);
-      setCommentDescription("");
     });
   };
 

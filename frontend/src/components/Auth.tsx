@@ -58,6 +58,7 @@ const Auth: React.FC<Props> = (props) => {
     props.setHeaders(headers);
 
     if (headers !== undefined) authenticationSuccessfulHandler();
+    setPasswordValue("");
   };
 
   const signUpClickedHandler = async () => {
@@ -65,6 +66,7 @@ const Auth: React.FC<Props> = (props) => {
     props.setHeaders(headers);
 
     if (headers !== undefined) authenticationSuccessfulHandler();
+    setPasswordValue("");
   };
 
   return (
@@ -75,7 +77,7 @@ const Auth: React.FC<Props> = (props) => {
       </div>
       <div>
         <div>password</div>
-        <TextInput setTextValue={setPasswordValue} fieldType={"password"} />
+        <TextInput setTextValue={setPasswordValue} fieldType={"password"} defaultValue={passwordValue} />
       </div>
       <div>
         <button onClick={() => signInClickedHandler()}>SignIn</button>

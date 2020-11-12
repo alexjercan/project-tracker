@@ -64,9 +64,9 @@ const ContributorList: React.FC<Props> = (props) => {
             contributorUsername,
             props.headers
         ).then((new_contributors) => {
+            setContributorUsername("");
             if (new_contributors === undefined) return;
             setContributors([...new_contributors, ...contributors]);
-            setContributorUsername("");
         });
     };
 

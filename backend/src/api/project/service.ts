@@ -22,4 +22,15 @@ export default class Service {
       throw error;
     }
   }
+
+  async DeleteProject(username: string, projectName: string): Promise<IProject | undefined> {
+    try {
+      const record = await this._model.FindOne(username, projectName);
+      if (record !== undefined) return undefined;
+
+      return await this._model.Delete(username, projectName);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

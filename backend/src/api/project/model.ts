@@ -78,4 +78,23 @@ export default class Model {
     await connection.close();
     return rows;
   }
+
+  async Delete(ownerUsername: string, projectName: string): Promise<IProject | undefined> {
+    const result = await oracledbWrapper.simpleExecute<{ error: number }>(
+      `BEGIN deleteProject(p_project_name => :project_name, p_owner_username => :owner_username, p_error => :error); END;`,
+      {
+        project_name: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: projectName },
+        owner_username: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: ownerUsername },
+        error: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
+      { autoCommit: true },
+    );
+
+    if (result.outBinds === undefined) return undefined;
+
+    const error = result.outBinds.error;
+    if (error !== 0) return undefined;
+
+    return { ownerUsername, projectName };
+  }
 }

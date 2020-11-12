@@ -35,4 +35,19 @@ export default class Controller {
       return res.status(500).send({ message: error });
     }
   }
+
+  async DeleteProject(req: Request, res: Response, next: NextFunction) {
+    const { user }: IVerified = req.body.verified as IVerified;
+    const { username }: ITokenUser = user as ITokenUser;
+
+    try {
+      const projectData = await this._service.DeleteProject(username, req.body.projectName);
+      if (projectData === undefined) return res.status(401).send({ message: 'Invalid Project' });
+
+      req.body.projects = [projectData];
+      next();
+    } catch (error) {
+      return res.status(500).send({ message: error });
+    }
+  }
 }

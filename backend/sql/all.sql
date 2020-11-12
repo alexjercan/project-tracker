@@ -326,6 +326,33 @@ exception
 end;
 /
 
+create or replace procedure deleteProject(p_project_name in string, p_owner_username in string, p_error out number)
+    is
+    v_owner_id   users.user_id%type;
+    v_project_id projects.project_id%type;
+begin
+    v_owner_id := getUserId(p_owner_username);
+
+    select project_id 
+    into v_project_id 
+    from projects 
+    where project_name = p_project_name 
+      and owner_id = v_owner_id;
+
+    delete from contributors
+    where project_id = v_project_id;
+    
+    delete from projects 
+    where project_name = p_project_name 
+      and owner_id = v_owner_id;
+
+    p_error := 0;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
 create or replace procedure getProjects(p_username in string, p_cursor out sys_refcursor, p_error out number)
     is
     v_user_id users.user_id%type;

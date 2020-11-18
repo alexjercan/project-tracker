@@ -7,6 +7,7 @@ import profile from './profile';
 import repository from './repository';
 import contributor from './contributor';
 import comment from './comment';
+import todo from './todo';
 
 const api = () => {
   const service = new Service();
@@ -16,6 +17,7 @@ const api = () => {
 
   router.use(ensureAuthenticated);
 
+  router.use('/todo', todo());
   router.use('/profile', profile());
   router.use('/project', project());
   router.use('/comment', comment());

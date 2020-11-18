@@ -68,6 +68,25 @@ alter table comments
         constraint comments_project_id_fk foreign key (project_id) references projects (project_id)
         );
 
+create table todos
+(
+    todo_id         number(10),
+    project_id      number(10),
+    description     varchar2(1024),
+    completed_by_id number(10),
+    timestamp       date
+);
+
+create unique index todos_comment_id_pk on todos (todo_id);
+
+alter table todos
+    add (
+        constraint todos_comment_id_pk primary key (todo_id),
+        constraint todos_user_id_fk foreign key (completed_by_id) references users (user_id),
+        constraint todos_project_id_fk foreign key (project_id) references projects (project_id)
+        );
+
+
 ------ AUTOMATED PK -------
 
 create sequence users_sequence;
@@ -116,10 +135,23 @@ create or replace trigger comments_on_insert
     on comments
     for each row
 begin
-    select contributors_sequence.nextval
+    select comments_sequence.nextval
     into :NEW.comment_id
     from dual;
 end;
+
+create sequence todos_sequence;
+
+create or replace trigger todos_on_insert
+    before insert
+    on todos
+    for each row
+begin
+    select todos_sequence.nextval
+    into :NEW.todo_id
+    from dual;
+end;
+
 
 ------- UTIL FUNCTIONS -------
 
@@ -333,18 +365,28 @@ create or replace procedure deleteProject(p_project_name in string, p_owner_user
 begin
     v_owner_id := getUserId(p_owner_username);
 
-    select project_id 
-    into v_project_id 
-    from projects 
-    where project_name = p_project_name 
+    select project_id
+    into v_project_id
+    from projects
+    where project_name = p_project_name
       and owner_id = v_owner_id;
 
-    delete from contributors
+    delete
+    from contributors
     where project_id = v_project_id;
-    
-    delete from projects 
-    where project_name = p_project_name 
+
+    delete
+    from projects
+    where project_id = v_project_id
       and owner_id = v_owner_id;
+
+    delete
+    from comments
+    where project_id = v_project_id;
+
+    delete
+    from todos
+    where project_id = v_project_id;
 
     p_error := 0;
 exception
@@ -532,6 +574,116 @@ begin
         where v_project_id = project_id
           and v_exists = 1
         order by timestamp desc;
+
+    if v_exists = 1 then
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
+exception
+    when others then
+        open p_cursor for select null from dual;
+        p_error := 1;
+end;
+/
+
+create or replace procedure insertTodo(p_owner_username in string, p_project_name in string, p_username in string,
+                                       p_description in string, p_todo_id out number, p_error out number)
+    is
+    v_user_id    users.user_id%type;
+    v_owner_id   users.user_id%type;
+    v_project_id projects.project_id%type;
+    v_exists     number;
+begin
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+
+    v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
+
+    if v_exists = 1 then
+        insert into todos(project_id, description)
+        values (v_project_id, p_description);
+
+        p_todo_id := todos_sequence.currval;
+
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
+create or replace procedure completeTodo(p_todo_id in number, p_owner_username in string, p_project_name in string,
+                                         p_username in string, p_description out string, p_completed_by out string,
+                                         p_timestamp out string, p_error out number)
+    is
+    v_user_id         users.user_id%type;
+    v_owner_id        users.user_id%type;
+    v_project_id      projects.project_id%type;
+    v_completed_by_id todos.completed_by_id%type;
+    v_timestamp       todos.timestamp%type;
+    v_exists          number;
+begin
+    v_user_id := getUserId(p_username);
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+
+    v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
+
+
+    if v_exists = 1 then
+        select completed_by_id, description
+        into v_completed_by_id, p_description
+        from todos
+        where todo_id = p_todo_id;
+
+        if v_completed_by_id is null then
+            select sysdate
+            into v_timestamp
+            from dual;
+            update todos
+            set completed_by_id=v_user_id,
+                timestamp=v_timestamp
+            where todo_id = p_todo_id;
+            p_completed_by := p_username;
+            p_timestamp := TO_CHAR(v_timestamp, 'DD-MM-YYYY HH:MI A.M.');
+        else
+            select username into p_completed_by from users where user_id = v_completed_by_id;
+            select timestamp into p_timestamp from todos where todo_id = p_todo_id;
+        end if;
+
+        p_error := 0;
+    else
+        p_error := 1;
+    end if;
+exception
+    when others then
+        p_error := 1;
+end;
+/
+
+create or replace procedure getTodos(p_username in string, p_owner_username in string, p_project_name in string,
+                                     p_cursor out sys_refcursor, p_error out number)
+    is
+    v_project_id projects.project_id%type;
+    v_owner_id   users.user_id%type;
+    v_exists     number;
+begin
+    v_owner_id := getUserId(p_owner_username);
+    v_project_id := getProjectId(p_owner_username, p_project_name);
+    v_exists := doesContributorExistFunc(p_project_name, p_owner_username, p_username);
+
+    open p_cursor for
+        select t.todo_id, t.description, u.username, TO_CHAR(t.timestamp, 'DD-MM-YYYY HH:MI A.M.')
+        from todos t
+             left join users u on t.completed_by_id = u.user_id
+        where v_project_id = t.project_id
+          and v_exists = 1
+        order by t.timestamp desc;
 
     if v_exists = 1 then
         p_error := 0;

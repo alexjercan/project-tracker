@@ -5,6 +5,7 @@ import TextInput from "./utils/TextInput";
 import CommentList from "./CommentList";
 import ContributorList from "./ContributorList";
 import TextAreaInput from "./utils/TextAreaInput";
+import TodoList from "./TodoList";
 
 interface Props {
   headers: Headers | undefined;
@@ -123,6 +124,11 @@ const Repository: React.FC<Props> = (props) => {
         Edit Repository
       </button>
       <ContributorList
+        ownerUsername={ownerUsername}
+        projectName={projectName}
+        headers={props.headers}
+      />
+      <TodoList
         ownerUsername={ownerUsername}
         projectName={projectName}
         headers={props.headers}

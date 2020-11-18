@@ -376,17 +376,17 @@ begin
     where project_id = v_project_id;
 
     delete
-    from projects
-    where project_id = v_project_id
-      and owner_id = v_owner_id;
-
-    delete
     from comments
     where project_id = v_project_id;
 
     delete
     from todos
     where project_id = v_project_id;
+    
+    delete
+    from projects
+    where project_id = v_project_id
+      and owner_id = v_owner_id;
 
     p_error := 0;
 exception

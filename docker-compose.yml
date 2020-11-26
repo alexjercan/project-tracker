@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+   oracle:
+    image: oracle
+    volumes:
+      - db_data:/var/lib/oracle
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    restart: always
+    environment:
+      ORACLE_PWD: oracle
+    networks:
+      api:
+        ipv4_address: 172.28.0.3
+        aliases:
+          - oracle
+
+   backend:
+    depends_on:
+      - oracle
+    build:
+      context: ./backend
+    image: my-backend
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    restart: always
+    environment:
+      ORACLEDB_USER: system
+      ORACLEDB_PASSWORD: oracle
+      ORACLEDB_CONNECTIONSTRING: localhost/ORCLPDB1
+      ORACLEDB_POOL_MIN: 1
+      ORACLEDB_POOL_MAX: 100
+      PORT: 8080
+      AUTH_SECRET: secret
+      AUTH_TOKEN: auth-token
+      AUTH_ROUNDS: 10
+      NODE_ENV: production
+      NODE_FRONEND_PATH: frontend
+    networks:
+      api:
+        ipv4_address: 172.28.0.2
+
+volumes:
+    db_data: {}
+
+networks:
+  api:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16

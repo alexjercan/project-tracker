@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
    oracle:
-    image: oracle
+    image: container-registry.oracle.com/database/enterprise:latest
     volumes:
       - db_data:/var/lib/oracle
     ports:
@@ -32,14 +32,14 @@ services:
     environment:
       ORACLEDB_USER: system
       ORACLEDB_PASSWORD: oracle
-      ORACLEDB_CONNECTIONSTRING: localhost/ORCLPDB1
+      ORACLEDB_CONNECTIONSTRING: oracle/ORCLPDB1
       ORACLEDB_POOL_MIN: 1
       ORACLEDB_POOL_MAX: 100
       PORT: 8080
       AUTH_SECRET: secret
       AUTH_TOKEN: auth-token
       AUTH_ROUNDS: 10
-      NODE_ENV: production
+      NODE_ENV: development
       NODE_FRONEND_PATH: frontend
     networks:
       api:

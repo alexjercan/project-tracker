@@ -139,6 +139,7 @@ begin
     into :NEW.comment_id
     from dual;
 end;
+/
 
 create sequence todos_sequence;
 
@@ -151,7 +152,7 @@ begin
     into :NEW.todo_id
     from dual;
 end;
-
+/
 
 ------- UTIL FUNCTIONS -------
 
@@ -382,7 +383,7 @@ begin
     delete
     from todos
     where project_id = v_project_id;
-    
+
     delete
     from projects
     where project_id = v_project_id
@@ -696,3 +697,4 @@ exception
         p_error := 1;
 end;
 /
+COMMIT;

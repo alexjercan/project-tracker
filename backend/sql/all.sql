@@ -13,6 +13,7 @@ create unique index users_user_id_pk on users (user_id);
 alter table users
     add (
         constraint users_user_id_pk primary key (user_id)
+        constraint users_username_uc unique (username)
         );
 
 create table projects
@@ -32,6 +33,7 @@ alter table projects
     add (
         constraint projects_project_id_pk primary key (project_id),
         constraint projects_owner_id_fk foreign key (owner_id) references users (user_id)
+        constraint projects_project_uc unique (project_name, owner_id)
         );
 
 create table contributors
